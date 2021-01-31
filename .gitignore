@@ -1,0 +1,8 @@
+*.user
+*.vcxproj
+*.sln
+*.filters
+/Debug/
+/Release/
+/libs/
+/.vs/
