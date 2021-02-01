@@ -2,6 +2,7 @@
 #include "LuaExceptions.hpp"
 
 using namespace std;
+using namespace saturn;
 
 constexpr int FUNC_PTR = 1;
 constexpr int STATE_PTR = 2;

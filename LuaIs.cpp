@@ -1,5 +1,7 @@
 #include "LuaState.hpp"
 
+using namespace saturn;
+
 LuaState::LuaIs::LuaIs(lua_State* L):
 	L(L)
 {

@@ -1,6 +1,8 @@
 #include "LuaState.hpp"
 #include "LuaExceptions.hpp"
 
+using namespace saturn;
+
 LuaState::LuaTo::LuaTo(lua_State* L) :
 	L(L)
 {

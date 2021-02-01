@@ -1,6 +1,8 @@
 #include "LuaType.hpp"
 
-const char* getTypeString(LuaType t)
+using namespace saturn;
+
+const char* saturn::getTypeString(LuaType t)
 {
 	switch(t)
 	{
@@ -29,7 +31,7 @@ const char* getTypeString(LuaType t)
 	}
 }
 
-LuaType convertLuaType(int t)
+LuaType saturn::convertLuaType(int t)
 {
 	switch(t)
 	{

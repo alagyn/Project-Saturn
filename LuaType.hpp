@@ -1,22 +1,25 @@
 #pragma once
 #include <lua.hpp>
 
-enum class LuaType
+namespace saturn
 {
-	ERROR,
-	NIL,
-	BOOL,
-	NUMBER,
-	STRING,
-	FUNCTION,
-	POINTER,
-	USERDATA,
-	THREAD,
-	TABLE
-};
+	enum class LuaType
+	{
+		ERROR,
+		NIL,
+		BOOL,
+		NUMBER,
+		STRING,
+		FUNCTION,
+		POINTER,
+		USERDATA,
+		THREAD,
+		TABLE
+	};
 
-LuaType convertLuaType(int t);
-const char* getTypeString(LuaType t);
+	LuaType convertLuaType(int t);
+	const char* getTypeString(LuaType t);
 
-using LuaInt = lua_Integer;
-using LuaNum = lua_Number;
+	using LuaInt = lua_Integer;
+	using LuaNum = lua_Number;
+}

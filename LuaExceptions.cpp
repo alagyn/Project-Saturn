@@ -3,6 +3,7 @@
 #include <sstream>
 
 using namespace std;
+using namespace saturn;
 
 LuaException::LuaException(const string& msg) :
 	msg(msg)

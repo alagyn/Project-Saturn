@@ -2,6 +2,8 @@
 #include "LuaType.hpp"
 #include "LuaExceptions.hpp"
 
+using namespace saturn;
+
 LuaState::LuaState(lua_State* L):
 	L(L),
 	push(this),

@@ -2,32 +2,35 @@
 #include "LuaType.hpp"
 #include <string>
 
-class LuaException : public std::exception
+namespace saturn
 {
-protected:
-	std::string msg;
+	class LuaException : public std::exception
+	{
+	protected:
+		std::string msg;
 
-public:
-	LuaException(const std::string& msg = "");
+	public:
+		LuaException(const std::string& msg = "");
 
-	const char* what();
-};
+		const char* what();
+	};
 
-class LuaInvalidType : public LuaException
-{
-public:
-	LuaInvalidType(LuaType expected);
-	LuaInvalidType(LuaType expected, LuaType actual);
-};
+	class LuaInvalidType : public LuaException
+	{
+	public:
+		LuaInvalidType(LuaType expected);
+		LuaInvalidType(LuaType expected, LuaType actual);
+	};
 
-class LuaCallError : public LuaException
-{
-public:
-	LuaCallError(const std::string& msg);
-};
+	class LuaCallError : public LuaException
+	{
+	public:
+		LuaCallError(const std::string& msg);
+	};
 
-class LuaLoadError : public LuaException
-{
-public:
-	LuaLoadError(const std::string& msg);
-};
+	class LuaLoadError : public LuaException
+	{
+	public:
+		LuaLoadError(const std::string& msg);
+	};
+}
