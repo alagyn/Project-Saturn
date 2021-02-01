@@ -4,7 +4,18 @@
 
 using namespace std;
 
-InvalidLuaType::InvalidLuaType(LuaType expected)
+LuaException::LuaException(const string& msg) :
+	msg(msg)
+{
+
+}
+
+const char* LuaException::what()
+{
+	return msg.c_str();
+}
+
+LuaInvalidType::LuaInvalidType(LuaType expected)
 {
 	stringstream x;
 	x << "Invalid Lua type, expected: ";
@@ -13,7 +24,7 @@ InvalidLuaType::InvalidLuaType(LuaType expected)
 	msg = x.str();
 }
 
-InvalidLuaType::InvalidLuaType(LuaType expected, LuaType actual)
+LuaInvalidType::LuaInvalidType(LuaType expected, LuaType actual)
 {
 	stringstream x;
 	x << "Invalid Lua type, expected: ";
@@ -23,7 +34,17 @@ InvalidLuaType::InvalidLuaType(LuaType expected, LuaType actual)
 	msg = x.str();
 }
 
-const char* InvalidLuaType::what()
+LuaCallError::LuaCallError(const std::string& msg)
 {
-	return msg.c_str();
+	stringstream x;
+	x << "Lua Call Error: " << msg;
+	this->msg = x.str();
 }
+
+LuaLoadError::LuaLoadError(const std::string& msg)
+{
+	stringstream x;
+	x << "Lua Load Error: " << msg;
+	this->msg = x.str();
+}
+

@@ -6,3 +6,5 @@
 /Release/
 /libs/
 /.vs/
+/test/
+main.cpp

@@ -29,7 +29,7 @@ LuaInt LuaState::LuaTo::integer(int idx, bool unsafe)
 	}
 	
 	LuaType act = convertLuaType(lua_type(L, idx));
-	throw InvalidLuaType(LuaType::NUMBER, act);
+	throw LuaInvalidType(LuaType::NUMBER, act);
 }
 
 LuaNum LuaState::LuaTo::number(int idx, bool unsafe)
@@ -49,7 +49,7 @@ LuaNum LuaState::LuaTo::number(int idx, bool unsafe)
 	}
 
 	LuaType act = convertLuaType(lua_type(L, idx));
-	throw InvalidLuaType(LuaType::NUMBER, act);
+	throw LuaInvalidType(LuaType::NUMBER, act);
 }
 
 void* LuaState::LuaTo::pointer(int idx)

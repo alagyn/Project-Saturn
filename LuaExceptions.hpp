@@ -2,14 +2,32 @@
 #include "LuaType.hpp"
 #include <string>
 
-class InvalidLuaType : public std::exception
+class LuaException : public std::exception
 {
-private:
+protected:
 	std::string msg;
 
 public:
-	InvalidLuaType(LuaType expected);
-	InvalidLuaType(LuaType expected, LuaType actual);
+	LuaException(const std::string& msg = "");
 
 	const char* what();
+};
+
+class LuaInvalidType : public LuaException
+{
+public:
+	LuaInvalidType(LuaType expected);
+	LuaInvalidType(LuaType expected, LuaType actual);
+};
+
+class LuaCallError : public LuaException
+{
+public:
+	LuaCallError(const std::string& msg);
+};
+
+class LuaLoadError : public LuaException
+{
+public:
+	LuaLoadError(const std::string& msg);
 };
