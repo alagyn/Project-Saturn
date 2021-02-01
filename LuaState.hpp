@@ -6,7 +6,7 @@
 
 class LuaState;
 
-using SaturnFunc = int (*)(LuaState*);
+using SaturnFunc = int (*)(LuaState&);
 using LuaCFunc = int (*)(lua_State*);
 
 class LuaState
@@ -15,19 +15,21 @@ private:
 	lua_State* L;
 	
 	LuaState(lua_State* L);
-	void makeModules();
-
-
+	
 	class LuaPush
 	{
 	private:
+		LuaState* parent;
 		lua_State* L;
 
+		static int callOverride(lua_State* L);
+		static int indexOverride(lua_State* L);
 	public:
-		LuaPush(lua_State* L = nullptr);
+		LuaPush(LuaState* parent);
 
 		void boolean(bool b);
-		void cFunction(LuaCFunc func);
+		void luaFunc(LuaCFunc func);
+		void saturnFunc(SaturnFunc func);
 		//TODO cClosure
 		//TODO fString
 		void globalTable();
@@ -54,12 +56,13 @@ private:
 		lua_State* L;
 
 	public:
-		LuaTo(lua_State* L = nullptr);
+		LuaTo(lua_State* L);
 
 		bool boolean(int idx);
 		//TODO toCFunc
 		LuaInt integer(int idx, bool unsafe = true);
 		//TODO look at tolstring & tostring
+		const char* string(int idx, size_t* len = nullptr);
 		LuaNum number(int idx, bool unsafe = true);
 		//internally touserdata
 		void* pointer(int idx);
@@ -73,7 +76,7 @@ private:
 		lua_State* L;
 
 	public:
-		LuaIs(lua_State* L = nullptr);
+		LuaIs(lua_State* L);
 
 		bool boolean(int idx);
 		bool cFunction(int idx);
@@ -100,7 +103,7 @@ private:
 		lua_State* L;
 
 	public:
-		LuaGet(lua_State* L = nullptr);
+		LuaGet(lua_State* L);
 
 		//TODO LuaGet
 		LuaType global(const std::string& name);
@@ -112,13 +115,25 @@ private:
 		bool metatable(int tableIdx);
 	};
 
+	class LuaSet
+	{
+	private:
+		lua_State* L;
+
+	public:
+		LuaSet(lua_State* L);
+
+		void global(const std::string& name);
+		//TODO LuaSet
+	};
+
 	class LuaStack
 	{
 	private:
 		lua_State* L;
 
 	public:
-		LuaStack(lua_State* L = nullptr);
+		LuaStack(lua_State* L);
 
 		//TODO top()
 		//TODO checkstack
@@ -134,12 +149,14 @@ private:
 		void callSetup();
 
 	public:
-		LuaLoader(lua_State* L = nullptr);
+		LuaLoader(lua_State* L);
 
 		void stdLibs();
 		void file(const std::string& filename, bool setup = true);
 		void string(const std::string& s, bool setup = true);
 	};
+
+	//TODO LuaMetatableUtils?
 
 public:
 	
@@ -147,6 +164,7 @@ public:
 	LuaTo to;
 	LuaLoader load;
 	LuaGet get;
+	LuaSet set;
 	LuaStack stack;
 
 	explicit LuaState(bool openLibs = true);

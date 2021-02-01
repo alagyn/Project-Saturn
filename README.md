@@ -6,5 +6,7 @@ Project Saturn aims to create a modern, simplified API for embedding Lua into an
 It's main goals are to reduce typing and syntax errors as well as being friendly with IDE autocompletion.
 It will also align more closely to modern C++ conventions and style.
 
+Saturn is currently being built onto Lua version 5.4
+
 ## API
 Coming soon!

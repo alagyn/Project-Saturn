@@ -56,3 +56,8 @@ void* LuaState::LuaTo::pointer(int idx)
 {
 	return lua_touserdata(L, idx);
 }
+
+const char* LuaState::LuaTo::string(int idx, size_t* len)
+{
+	return lua_tolstring(L, idx, len);
+}
