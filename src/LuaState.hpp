@@ -2,7 +2,6 @@
 #include <lua.hpp>
 #include <string>
 #include "LuaType.hpp"
-#include <unordered_map>
 
 namespace saturn
 {
@@ -24,6 +23,7 @@ namespace saturn
 			LuaState* parent;
 			lua_State* L;
 
+			//TODO test efficiency of SaturnFuncs
 			static int callOverride(lua_State* L);
 			static int indexOverride(lua_State* L);
 		public:
@@ -97,6 +97,9 @@ namespace saturn
 			bool thread(int idx);
 			bool userdata(int idx);
 			bool yieldable(int idx);
+
+			//TODO equal?
+			//rawequal
 		};
 
 		class LuaGet
@@ -115,6 +118,13 @@ namespace saturn
 			LuaType key(int tableIdx);
 			//Returns true if mt exists
 			bool metatable(int tableIdx);
+			LuaType type(int idx);
+			void length(int idx);
+
+			void rawLength(int idx);
+			LuaType rawKey(int tableIdx);
+			LuaType rawIndex(int tableIdx, LuaInt idx);
+
 		};
 
 		class LuaSet
@@ -126,7 +136,14 @@ namespace saturn
 			LuaSet(lua_State* L);
 
 			void global(const std::string& name);
-			//TODO LuaSet
+			void key(int tableIdx, const std::string& key);
+			void key(int tableIdx);
+			void index(int tableIdx, LuaInt idx);
+			//TODO setiuservalue?
+			void metatable(int tableIdx);
+
+			void rawKey(int tableIdx);
+			void rawIndex(int tableIdx, LuaInt idx);
 		};
 
 		class LuaStack
@@ -137,10 +154,18 @@ namespace saturn
 		public:
 			LuaStack(lua_State* L);
 
-			//TODO top()
-			//TODO checkstack
-			//TODO absindex
-			//TODO insert
+			int absIndex(int idx);
+			//internally checkstack
+			bool ensure(int n);
+			void close();
+			int top();
+			void top(int newTop);
+			void insert(int idx);
+			//TODO next?
+			void remove(int idx);
+			void replace(int idx);
+			void rotate(int idx, int n);
+			//TODO equal/ other comparisons?
 		};
 
 		class LuaLoader
@@ -159,7 +184,9 @@ namespace saturn
 		};
 
 		//TODO LuaMetatableUtils?
-
+		//TODO LuaArith?
+		//TODO LuaGarbage?
+		//TODO LuaThread?
 	public:
 
 		LuaPush push;
@@ -172,9 +199,11 @@ namespace saturn
 		explicit LuaState(bool openLibs = true);
 
 		void pop(int n);
-		LuaType getType(int idx);
-
+		
 		void call(int numArgs = 0, int numReturns = LUA_MULTRET);
+
+		void registerFunc(const std::string& name, LuaCFunc func);
+		void registerFunc(const std::string& name, SaturnFunc func);
 
 	};
 }

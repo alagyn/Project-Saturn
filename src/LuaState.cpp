@@ -31,11 +31,6 @@ void LuaState::pop(int n)
 	lua_pop(L, n);
 }
 
-LuaType LuaState::getType(int idx)
-{
-	return convertLuaType(lua_type(L, idx));
-}
-
 void LuaState::call(int numArgs, int numReturns)
 {
 	//TOCHANGE pull func name for errors?
@@ -47,4 +42,15 @@ void LuaState::call(int numArgs, int numReturns)
 	{
 		throw LuaCallError(lua_tostring(L, -1));
 	}
+}
+
+void LuaState::registerFunc(const std::string& name, LuaCFunc func)
+{
+	lua_register(L, name.c_str(), func);
+}
+
+void LuaState::registerFunc(const std::string& name, SaturnFunc func)
+{
+	push.saturnFunc(func);
+	set.global(name);
 }
