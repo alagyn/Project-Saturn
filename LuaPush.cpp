@@ -47,3 +47,18 @@ void LuaState::LuaPush::copy(int idx)
 {
 	lua_pushvalue(L, idx);
 }
+
+void LuaState::LuaPush::copy(int from, int to)
+{
+	lua_copy(L, from, to);
+}
+
+void LuaState::LuaPush::cFunction(LuaCFunc func)
+{
+	lua_pushcfunction(L, func);
+}
+
+void LuaState::LuaPush::table(int arrayHint, int dictHint)
+{
+	lua_createtable(L, arrayHint, dictHint);
+}

@@ -2,18 +2,31 @@
 #include "LuaType.hpp"
 #include "LuaExceptions.hpp"
 
-LuaState::LuaState(bool openLibs) :
-	L(luaL_newstate()),
-	push(L),
-	to(L),
-	load(L),
-	get(L)
+LuaState::LuaState(lua_State* L)
 {
+	makeModules();
+}
+
+LuaState::LuaState(bool openLibs) :
+	L(luaL_newstate())
+{
+	makeModules();
+
 	if(openLibs)
 	{
 		load.stdLibs();
 	}
 }
+
+void LuaState::makeModules()
+{
+	push = LuaPush(L);
+	to = LuaTo(L);
+	load = LuaLoader(L);
+	get = LuaGet(L);
+	stack = LuaStack(L);
+}
+
 
 void LuaState::pop(int n)
 {

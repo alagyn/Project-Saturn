@@ -2,11 +2,21 @@
 #include <lua.hpp>
 #include <string>
 #include "LuaType.hpp"
+#include <unordered_map>
+
+class LuaState;
+
+using SaturnFunc = int (*)(LuaState*);
+using LuaCFunc = int (*)(lua_State*);
 
 class LuaState
 {
 private:
 	lua_State* L;
+	
+	LuaState(lua_State* L);
+	void makeModules();
+
 
 	class LuaPush
 	{
@@ -14,10 +24,11 @@ private:
 		lua_State* L;
 
 	public:
-		LuaPush(lua_State* L);
+		LuaPush(lua_State* L = nullptr);
 
 		void boolean(bool b);
-		//TODO cFunc/cClosure
+		void cFunction(LuaCFunc func);
+		//TODO cClosure
 		//TODO fString
 		void globalTable();
 		void integer(LuaInt n);
@@ -31,7 +42,10 @@ private:
 		//TODO pushthread
 		//internally pushvalue
 		void copy(int idx);
+		void copy(int from, int to);
 		//TODO vfstring
+		void table(int arrayHint = 0, int dictHint = 0);
+		//TODO newuserdata
 	};
 
 	class LuaTo
@@ -40,7 +54,7 @@ private:
 		lua_State* L;
 
 	public:
-		LuaTo(lua_State* L);
+		LuaTo(lua_State* L = nullptr);
 
 		bool boolean(int idx);
 		//TODO toCFunc
@@ -59,7 +73,7 @@ private:
 		lua_State* L;
 
 	public:
-		LuaIs(lua_State* L);
+		LuaIs(lua_State* L = nullptr);
 
 		bool boolean(int idx);
 		bool cFunction(int idx);
@@ -86,10 +100,30 @@ private:
 		lua_State* L;
 
 	public:
-		LuaGet(lua_State* L);
+		LuaGet(lua_State* L = nullptr);
 
 		//TODO LuaGet
 		LuaType global(const std::string& name);
+		LuaType index(int tableIdx, LuaInt idx);
+		LuaType key(int tableIdx, const std::string& key);
+		//Uses top of stack as key, works for any object as key?
+		LuaType key(int tableIdx);
+		//Returns true if mt exists
+		bool metatable(int tableIdx);
+	};
+
+	class LuaStack
+	{
+	private:
+		lua_State* L;
+
+	public:
+		LuaStack(lua_State* L = nullptr);
+
+		//TODO top()
+		//TODO checkstack
+		//TODO absindex
+		//TODO insert
 	};
 	
 	class LuaLoader
@@ -100,7 +134,7 @@ private:
 		void callSetup();
 
 	public:
-		LuaLoader(lua_State* L);
+		LuaLoader(lua_State* L = nullptr);
 
 		void stdLibs();
 		void file(const std::string& filename, bool setup = true);
@@ -113,8 +147,9 @@ public:
 	LuaTo to;
 	LuaLoader load;
 	LuaGet get;
+	LuaStack stack;
 
-	LuaState(bool openLibs = true);
+	explicit LuaState(bool openLibs = true);
 	
 	void pop(int n);
 	LuaType getType(int idx);
@@ -122,4 +157,3 @@ public:
 	void call(int numArgs = 0, int numReturns = LUA_MULTRET);
 
 };
-

@@ -5,6 +5,12 @@
 
 using namespace std;
 
+int nativeTest(LuaState* L)
+{
+	cout << "This is a native call" << endl;
+	return 0;
+}
+
 int main()
 {
 	LuaState L;
@@ -12,8 +18,7 @@ int main()
 	try
 	{
 		L.load.file("test/test1.lua");
-		L.get.global("testFunc");
-		L.call();
+
 	}
 	catch(LuaException& e)
 	{
