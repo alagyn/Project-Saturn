@@ -67,3 +67,14 @@ int main()
 
 ## API
 Coming soon!
+
+
+## What the name means
+Saturn is an acronym for "Snakes Are The Underrated Reptile Narwhal"...
+
+
+Just kidding, Project Saturn gets it's name from the Saturn V launch vehicle,
+the first rocket to allow crewed missions to reach the moon (or Lua, in Portuguese).
+
+
+And I just think that Saturn has a nice __*ring*__ to it.
