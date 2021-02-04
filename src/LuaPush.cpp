@@ -1,4 +1,4 @@
-#include "LuaState.hpp"
+#include "LuaContext.hpp"
 #include "LuaExceptions.hpp"
 
 using namespace std;

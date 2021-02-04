@@ -1,5 +1,5 @@
 #pragma once
 
-#include "LuaState.hpp"
+#include "LuaContext.hpp"
 #include "LuaExceptions.hpp"
 #include "LuaType.hpp"
