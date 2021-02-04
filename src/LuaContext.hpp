@@ -5,35 +5,34 @@
 
 namespace saturn
 {
-	class LuaState;
+	class LuaContext;
 
-	using SaturnFunc = int (*)(LuaState&);
+	using SaturnFunc = int (*)(LuaContext&);
 	using LuaCFunc = int (*)(lua_State*);
 
-	class LuaState
+	class LuaContext
 	{
 	private:
 		lua_State* L;
 
-		LuaState(lua_State* L);
+		LuaContext(lua_State* L);
 
 		class LuaPush
 		{
 		private:
-			LuaState* parent;
+			LuaContext* parent;
 			lua_State* L;
 
 			//TODO test efficiency of SaturnFuncs
 			static int callOverride(lua_State* L);
 			static int indexOverride(lua_State* L);
 		public:
-			LuaPush(LuaState* parent);
+			LuaPush(LuaContext* parent);
 
 			void boolean(bool b);
-			void luaFunc(LuaCFunc func);
+			void luaFunc(LuaCFunc func, int upvalues = 0);
 			void saturnFunc(SaturnFunc func);
-			//TODO cClosure
-			//TODO fString
+			void fString(const char* format, ...);
 			void globalTable();
 			void integer(LuaInt n);
 			//Internally lightuserdata
@@ -196,7 +195,7 @@ namespace saturn
 		LuaSet set;
 		LuaStack stack;
 
-		explicit LuaState(bool openLibs = true);
+		explicit LuaContext(bool openLibs = true);
 
 		void pop(int n);
 		

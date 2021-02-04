@@ -3,18 +3,18 @@
 
 using namespace saturn;
 
-LuaState::LuaLoader::LuaLoader(lua_State* L) :
+LuaContext::LuaLoader::LuaLoader(lua_State* L) :
 	L(L)
 {
 
 }
 
-void LuaState::LuaLoader::stdLibs()
+void LuaContext::LuaLoader::stdLibs()
 {
 	luaL_openlibs(L);
 }
 
-void LuaState::LuaLoader::callSetup()
+void LuaContext::LuaLoader::callSetup()
 {
 	int error = lua_pcall(L, 0, 0, 0);
 	if(error)
@@ -23,7 +23,7 @@ void LuaState::LuaLoader::callSetup()
 	}
 }
 
-void LuaState::LuaLoader::file(const std::string& filename, bool setup)
+void LuaContext::LuaLoader::file(const std::string& filename, bool setup)
 {
 	if(luaL_loadfile(L, filename.c_str()))
 	{
@@ -36,7 +36,7 @@ void LuaState::LuaLoader::file(const std::string& filename, bool setup)
 	}
 }
 
-void LuaState::LuaLoader::string(const std::string& s, bool setup)
+void LuaContext::LuaLoader::string(const std::string& s, bool setup)
 {
 	if(luaL_loadstring(L, s.c_str()))
 	{

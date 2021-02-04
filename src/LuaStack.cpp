@@ -2,7 +2,7 @@
 
 using namespace saturn;
 
-LuaState::LuaStack::LuaStack(lua_State* L) :
+LuaContext::LuaStack::LuaStack(lua_State* L) :
 	L(L)
 {
 

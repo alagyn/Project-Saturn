@@ -3,18 +3,18 @@
 
 using namespace saturn;
 
-LuaState::LuaTo::LuaTo(lua_State* L) :
+LuaContext::LuaTo::LuaTo(lua_State* L) :
 	L(L)
 {
 
 }
 
-bool LuaState::LuaTo::boolean(int idx)
+bool LuaContext::LuaTo::boolean(int idx)
 {
 	return lua_toboolean(L, idx);
 }
 
-LuaInt LuaState::LuaTo::integer(int idx, bool unsafe)
+LuaInt LuaContext::LuaTo::integer(int idx, bool unsafe)
 {
 	if(unsafe)
 	{
@@ -34,7 +34,7 @@ LuaInt LuaState::LuaTo::integer(int idx, bool unsafe)
 	throw LuaInvalidType(LuaType::NUMBER, act);
 }
 
-LuaNum LuaState::LuaTo::number(int idx, bool unsafe)
+LuaNum LuaContext::LuaTo::number(int idx, bool unsafe)
 {
 	if(unsafe)
 	{
@@ -54,12 +54,12 @@ LuaNum LuaState::LuaTo::number(int idx, bool unsafe)
 	throw LuaInvalidType(LuaType::NUMBER, act);
 }
 
-void* LuaState::LuaTo::pointer(int idx)
+void* LuaContext::LuaTo::pointer(int idx)
 {
 	return lua_touserdata(L, idx);
 }
 
-const char* LuaState::LuaTo::string(int idx, size_t* len)
+const char* LuaContext::LuaTo::string(int idx, size_t* len)
 {
 	return lua_tolstring(L, idx, len);
 }

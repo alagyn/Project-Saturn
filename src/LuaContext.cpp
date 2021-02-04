@@ -4,7 +4,7 @@
 
 using namespace saturn;
 
-LuaState::LuaState(lua_State* L):
+LuaContext::LuaContext(lua_State* L):
 	L(L),
 	push(this),
 	to(L),
@@ -16,8 +16,8 @@ LuaState::LuaState(lua_State* L):
 	
 }
 
-LuaState::LuaState(bool openLibs) :
-	LuaState(luaL_newstate())
+LuaContext::LuaContext(bool openLibs) :
+	LuaContext(luaL_newstate())
 {
 	if(openLibs)
 	{
@@ -26,12 +26,12 @@ LuaState::LuaState(bool openLibs) :
 }
 
 
-void LuaState::pop(int n)
+void LuaContext::pop(int n)
 {
 	lua_pop(L, n);
 }
 
-void LuaState::call(int numArgs, int numReturns)
+void LuaContext::call(int numArgs, int numReturns)
 {
 	//TOCHANGE pull func name for errors?
 	//TOCHANGE allow msg handlers?
@@ -44,12 +44,12 @@ void LuaState::call(int numArgs, int numReturns)
 	}
 }
 
-void LuaState::registerFunc(const std::string& name, LuaCFunc func)
+void LuaContext::registerFunc(const std::string& name, LuaCFunc func)
 {
 	lua_register(L, name.c_str(), func);
 }
 
-void LuaState::registerFunc(const std::string& name, SaturnFunc func)
+void LuaContext::registerFunc(const std::string& name, SaturnFunc func)
 {
 	push.saturnFunc(func);
 	set.global(name);
