@@ -25,6 +25,11 @@ LuaContext::LuaContext(bool openLibs) :
 	}
 }
 
+LuaContext::~LuaContext()
+{
+	lua_close(L);
+}
+
 
 void LuaContext::pop(int n)
 {
@@ -35,6 +40,9 @@ void LuaContext::call(int numArgs, int numReturns)
 {
 	//TOCHANGE pull func name for errors?
 	//TOCHANGE allow msg handlers?
+	
+	//TOCHANGE make an all in one call func
+	//i.e. call("func", ArgList);
 
 	int error = lua_pcall(L, numArgs, numReturns, 0);
 

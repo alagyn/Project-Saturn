@@ -3,6 +3,18 @@
 #include <string>
 #include "LuaType.hpp"
 
+//TOFIX Test constructor efficiency w/ and w/o inner classes
+//TOFIX Test SaturnFunc efficiency vs vanilla
+//TOFIX Test SaturnFunc storing pointers in table vs upvalues
+//TOFIX Figure out how to let users have upvalues for SaturnFuncs
+//TOFIX Figure out if LuaContext needs any state
+
+//TOCHANGE change inner classes to be templates
+//Instead of ctx.push.string("asdf")
+//Do ctx.push<string>("asdf")
+//Make template specializations for each
+//Make default template throw an error for undefined operations
+
 namespace saturn
 {
 	class LuaContext;
@@ -15,15 +27,12 @@ namespace saturn
 	private:
 		lua_State* L;
 
-		LuaContext(lua_State* L);
-
 		class LuaPush
 		{
 		private:
 			LuaContext* parent;
 			lua_State* L;
 
-			//TODO test efficiency of SaturnFuncs
 			static int callOverride(lua_State* L);
 			static int indexOverride(lua_State* L);
 		public:
@@ -33,12 +42,12 @@ namespace saturn
 			void luaFunc(LuaCFunc func, int upvalues = 0);
 			void saturnFunc(SaturnFunc func);
 			void fString(const char* format, ...);
+			void cString(const char* s, int len = -1);
 			void globalTable();
 			void integer(LuaInt n);
 			//Internally lightuserdata
 			void pointer(void* p);
-			//TODO pushliteral
-			//TODO pushlstring
+			
 			void nil();
 			void number(LuaNum n);
 			void string(const std::string& s);
@@ -46,7 +55,6 @@ namespace saturn
 			//internally pushvalue
 			void copy(int idx);
 			void copy(int from, int to);
-			//TODO vfstring
 			void table(int arrayHint = 0, int dictHint = 0);
 			//TODO newuserdata
 		};
@@ -60,15 +68,13 @@ namespace saturn
 			LuaTo(lua_State* L);
 
 			bool boolean(int idx);
-			//TODO toCFunc
+			LuaCFunc luaFunc(int idx);
 			LuaInt integer(int idx, bool unsafe = true);
-			//TODO look at tolstring & tostring
-			const char* string(int idx, size_t* len = nullptr);
+			const char* string(int idx, size_t* lenOutput = nullptr);
 			LuaNum number(int idx, bool unsafe = true);
 			//internally touserdata
 			void* pointer(int idx);
 			//TODO tothread
-
 		};
 
 		class LuaIs
@@ -78,7 +84,7 @@ namespace saturn
 
 		public:
 			LuaIs(lua_State* L);
-
+			
 			bool boolean(int idx);
 			bool cFunction(int idx);
 			bool function(int idx);
@@ -196,6 +202,9 @@ namespace saturn
 		LuaStack stack;
 
 		explicit LuaContext(bool openLibs = true);
+		explicit LuaContext(lua_State* L);
+
+		~LuaContext();
 
 		void pop(int n);
 		

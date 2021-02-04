@@ -59,7 +59,13 @@ void* LuaContext::LuaTo::pointer(int idx)
 	return lua_touserdata(L, idx);
 }
 
-const char* LuaContext::LuaTo::string(int idx, size_t* len)
+const char* LuaContext::LuaTo::string(int idx, size_t* lenOutput)
 {
-	return lua_tolstring(L, idx, len);
+	return lua_tolstring(L, idx, lenOutput);
+}
+
+//Undefined for non vanilla C functions
+LuaCFunc LuaContext::LuaTo::luaFunc(int idx)
+{
+	return lua_tocfunction(L, idx);
 }

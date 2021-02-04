@@ -56,6 +56,18 @@ void LuaContext::LuaPush::fString(const char* format, ...)
 	lua_pushvfstring(L, format, args);
 }
 
+void LuaContext::LuaPush::cString(const char* s, int len)
+{
+	if(len < 0)
+	{
+		lua_pushstring(L, s);
+	}
+	else
+	{
+		lua_pushlstring(L, s, len);
+	}
+}
+
 void LuaContext::LuaPush::copy(int idx)
 {
 	lua_pushvalue(L, idx);
