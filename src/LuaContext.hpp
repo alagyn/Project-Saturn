@@ -3,6 +3,8 @@
 #include <string>
 #include "LuaType.hpp"
 
+#define INNER
+
 //TOFIX Test constructor efficiency w/ and w/o inner classes
 //TOFIX Test SaturnFunc efficiency vs vanilla
 //TOFIX Test SaturnFunc storing pointers in table vs upvalues
