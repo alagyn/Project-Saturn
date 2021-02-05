@@ -89,7 +89,6 @@ void LuaContext::push_saturnFunc(SaturnFunc func)
 	lua_pushlightuserdata(L, func);
 
 	lua_pushcclosure(L, callOverride, 2);
-	//lua_pushcclosure(L, callOverride, 1);
 }
 
 int LuaContext::callOverride(lua_State* L)
