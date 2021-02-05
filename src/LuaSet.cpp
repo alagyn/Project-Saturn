@@ -9,47 +9,39 @@ void LuaContext::set_global(const std::string& name)
 }
 
 
-/*
-LuaContext::LuaSet::LuaSet(lua_State* L) :
-	L(L)
-{
-
-}
-
 //Stack: -1 = val
-void LuaContext::LuaSet::key(int tableIdx, const std::string& key)
+void LuaContext::set_key(int tableIdx, const std::string& key)
 {
 	lua_setfield(L, tableIdx, key.c_str());
 }
 
 //Stack: -2 = key, -1 = val
 //Pops both
-void LuaContext::LuaSet::key(int tableIdx)
+void LuaContext::set_key(int tableIdx)
 {
 	lua_settable(L, tableIdx);
 }
 
 //Stack: -1 = val
-void LuaContext::LuaSet::index(int tableIdx, LuaInt idx)
+void LuaContext::set_index(int tableIdx, LuaInt idx)
 {
 	lua_seti(L, tableIdx, idx);
 }
 
 //Stack: -1 = metatable
-void LuaContext::LuaSet::metatable(int tableIdx)
+void LuaContext::set_metatable(int tableIdx)
 {
 	lua_setmetatable(L, tableIdx);
 }
 
 //Stack: -2 = key, -1 = val
-void LuaContext::LuaSet::rawKey(int tableIdx)
+void LuaContext::set_rawKey(int tableIdx)
 {
 	lua_rawset(L, tableIdx);
 }
 
 //Stack: -1 = val
-void LuaContext::LuaSet::rawIndex(int tableIdx, LuaInt idx)
+void LuaContext::set_rawIndex(int tableIdx, LuaInt idx)
 {
 	lua_rawseti(L, tableIdx, idx);
 }
-*/

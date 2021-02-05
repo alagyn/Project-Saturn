@@ -7,44 +7,37 @@ using namespace saturn;
 constexpr int FUNC_PTR = 1;
 constexpr int STATE_PTR = 2;
 
-/*
-LuaContext::LuaPush::LuaPush(LuaContext* parent) :
-	parent(parent)
-{
-	L = parent->L;
-}
-
-void LuaContext::LuaPush::boolean(bool b)
+void LuaContext::push_boolean(bool b)
 {
 	lua_pushboolean(L, b);
 }
 
-void LuaContext::LuaPush::globalTable()
+void LuaContext::push_globalTable()
 {
 	lua_pushglobaltable(L);
 }
 
-void LuaContext::LuaPush::pointer(void* p)
+void LuaContext::push_pointer(void* p)
 {
 	lua_pushlightuserdata(L, p);
 }
 
-void LuaContext::LuaPush::nil()
+void LuaContext::push_nil()
 {
 	lua_pushnil(L);
 }
 
-void LuaContext::LuaPush::number(LuaNum n)
+void LuaContext::push_number(LuaNum n)
 {
 	lua_pushnumber(L, n);
 }
 
-void LuaContext::LuaPush::string(const std::string& s)
+void LuaContext::push_string(const std::string& s)
 {
 	lua_pushstring(L, s.c_str());
 }
 
-void LuaContext::LuaPush::fString(const char* format, ...)
+void LuaContext::push_fString(const char* format, ...)
 {
 	va_list args;
 	va_start(args, format);
@@ -52,7 +45,7 @@ void LuaContext::LuaPush::fString(const char* format, ...)
 	lua_pushvfstring(L, format, args);
 }
 
-void LuaContext::LuaPush::cString(const char* s, int len)
+void LuaContext::push_cString(const char* s, int len)
 {
 	if(len < 0)
 	{
@@ -64,30 +57,21 @@ void LuaContext::LuaPush::cString(const char* s, int len)
 	}
 }
 
-void LuaContext::LuaPush::copy(int idx)
+void LuaContext::push_copy(int idx)
 {
 	lua_pushvalue(L, idx);
 }
 
-void LuaContext::LuaPush::copy(int from, int to)
+void LuaContext::push_copy(int from, int to)
 {
 	lua_copy(L, from, to);
 }
 
 
-void LuaContext::LuaPush::table(int arrayHint, int dictHint)
+void LuaContext::push_table(int arrayHint, int dictHint)
 {
 	lua_createtable(L, arrayHint, dictHint);
 }
-
-int LuaContext::LuaPush::indexOverride(lua_State* L)
-{
-	//TOCHANGE indexoverride?
-	//can just state that messing with these funcs 
-	//causes undefined behavior
-	return 0;
-}
-*/
 
 void LuaContext::push_integer(LuaInt n)
 {

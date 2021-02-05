@@ -6,16 +6,8 @@
 #define NO_INNER
 
 //TOFIX Test constructor efficiency w/ and w/o inner classes
-//TOFIX Test SaturnFunc efficiency vs vanilla
-//TOFIX Test SaturnFunc storing pointers in table vs upvalues
 //TOFIX Figure out how to let users have upvalues for SaturnFuncs
 //TOFIX Figure out if LuaContext needs any state
-
-//TOCHANGE change inner classes to be templates
-//Instead of ctx.push.string("asdf")
-//Do ctx.push<string>("asdf")
-//Make template specializations for each
-//Make default template throw an error for undefined operations
 
 namespace saturn
 {
@@ -29,154 +21,102 @@ namespace saturn
 	private:
 		lua_State* L;
 
-		
 		static int callOverride(lua_State* L);
-		
+
 	public:
-			/*
-			void push_boolean(bool b);
-			*/
-			void push_luaFunc(LuaCFunc func, int upvalues = 0);
-			void push_saturnFunc(SaturnFunc func);
-			/*
-			void push_fString(const char* format, ...);
-			void push_cString(const char* s, int len = -1);
-			void push_globalTable();
-			*/
-			void push_integer(LuaInt n);
-			//Internally lightuserdata
-			/*
-			void push_pointer(void* p);
-			
-			void push_nil();
-			void push_number(LuaNum n);
-			void push_string(const std::string& s);
-			//TODO pushthread
-			//internally pushvalue
-			void push_copy(int idx);
-			void push_copy(int from, int to);
-			void push_table(int arrayHint = 0, int dictHint = 0);
-			//TODO newuserdata
-			*/
-	
-			/*
-		class LuaTo
-		{
-		private:
-			lua_State* L;
 
-		public:
-			LuaTo(lua_State* L);
+		void push_boolean(bool b);
+		void push_luaFunc(LuaCFunc func, int upvalues = 0);
+		void push_saturnFunc(SaturnFunc func);
 
-			bool boolean(int idx);
-			LuaCFunc luaFunc(int idx);
-			
-			const char* string(int idx, size_t* lenOutput = nullptr);
-			LuaNum number(int idx, bool unsafe = true);
-			//internally touserdata
-			void* pointer(int idx);
-			//TODO tothread
-		};
+		void push_fString(const char* format, ...);
+		void push_cString(const char* s, int len = -1);
+		void push_globalTable();
 
-		class LuaIs
-		{
-		private:
-			lua_State* L;
+		void push_integer(LuaInt n);
+		//Internally lightuserdata
+		void push_pointer(void* p);
 
-		public:
-			LuaIs(lua_State* L);
-			
-			bool boolean(int idx);
-			bool cFunction(int idx);
-			bool function(int idx);
-			bool integer(int idx);
-			//internally isLightUserData
-			bool pointer(int idx);
-			bool nil(int idx);
-			//internally isNone
-			bool invalid(int idx);
-			//internally isNoneOrNil
-			bool invalidOrNil(int idx);
-			bool number(int idx);
-			bool string(int idx);
-			bool table(int idx);
-			bool thread(int idx);
-			bool userdata(int idx);
-			bool yieldable(int idx);
+		void push_nil();
+		void push_number(LuaNum n);
+		void push_string(const std::string& s);
+		//TODO pushthread
+		//internally pushvalue
+		void push_copy(int idx);
+		void push_copy(int from, int to);
+		void push_table(int arrayHint = 0, int dictHint = 0);
+		//TODO newuserdata
 
-			//TODO equal?
-			//rawequal
-		};
+		bool to_boolean(int idx);
+		LuaCFunc to_luaFunc(int idx);
 
-		class LuaGet
-		{
-		private:
-			lua_State* L;
+		const char* to_string(int idx, size_t* lenOutput = nullptr);
+		LuaNum to_number(int idx, bool unsafe = true);
+		//internally touserdata
+		void* to_pointer(int idx);
+		//TODO tothread
 
-		public:
-			LuaGet(lua_State* L);
+		bool is_boolean(int idx);
+		bool is_cFunction(int idx);
+		bool is_function(int idx);
+		bool is_integer(int idx);
+		//internally isLightUserData
+		bool is_pointer(int idx);
+		bool is_nil(int idx);
+		//internally isNone
+		bool is_invalid(int idx);
+		//internally isNoneOrNil
+		bool is_invalidOrNil(int idx);
+		bool is_number(int idx);
+		bool is_string(int idx);
+		bool is_table(int idx);
+		bool is_thread(int idx);
+		bool is_userdata(int idx);
+		bool is_yieldable(int idx);
 
-			//TODO LuaGet
-			LuaType index(int tableIdx, LuaInt idx);
-			LuaType key(int tableIdx, const std::string& key);
-			//Uses top of stack as key, works for any object as key?
-			LuaType key(int tableIdx);
-			//Returns true if mt exists
-			bool metatable(int tableIdx);
-			LuaType type(int idx);
-			void length(int idx);
+		//TODO equal?
+		//rawequal
 
-			void rawLength(int idx);
-			LuaType rawKey(int tableIdx);
-			LuaType rawIndex(int tableIdx, LuaInt idx);
+		//TODO LuaGet
+		LuaType get_index(int tableIdx, LuaInt idx);
+		LuaType get_key(int tableIdx, const std::string& key);
+		//Uses top of stack as key, works for any object as key?
+		LuaType get_key(int tableIdx);
+		//Returns true if mt exists
+		bool get_metatable(int tableIdx);
+		LuaType get_type(int idx);
+		void get_length(int idx);
 
-		};
+		void get_rawLength(int idx);
+		LuaType get_rawKey(int tableIdx);
+		LuaType get_rawIndex(int tableIdx, LuaInt idx);
 
-		class LuaSet
-		{
-		private:
-			lua_State* L;
+		void set_key(int tableIdx, const std::string& key);
+		void set_key(int tableIdx);
+		void set_index(int tableIdx, LuaInt idx);
+		//TODO setiuservalue?
+		void set_metatable(int tableIdx);
+		void set_rawKey(int tableIdx);
+		void set_rawIndex(int tableIdx, LuaInt idx);
 
-		public:
-			LuaSet(lua_State* L);
-
-			void key(int tableIdx, const std::string& key);
-			void key(int tableIdx);
-			void index(int tableIdx, LuaInt idx);
-			//TODO setiuservalue?
-			void metatable(int tableIdx);
-
-			void rawKey(int tableIdx);
-			void rawIndex(int tableIdx, LuaInt idx);
-		};
-
-		class LuaStack
-		{
-		private:
-			lua_State* L;
-
-		public:
-			LuaStack(lua_State* L);
-
-			int absIndex(int idx);
-			//internally checkstack
-			bool ensure(int n);
-			void close();
-			int top();
-			void top(int newTop);
-			void insert(int idx);
-			//TODO next?
-			void remove(int idx);
-			void replace(int idx);
-			void rotate(int idx, int n);
-			//TODO equal/ other comparisons?
-		};
+		/*
+		int stack_absIndex(int idx);
+		//internally checkstack
+		bool stack_ensure(int n);
+		void stack_close();
+		int stack_top();
+		void stack_top(int newTop);
+		void stack_insert(int idx);
+		//TODO next?
+		void stack_remove(int idx);
+		void stack_replace(int idx);
+		void stack_rotate(int idx, int n);
+		//TODO equal/ other comparisons?
 		*/
 
 		/*
 		class LuaLoader
 		{
-		
 		public:
 			LuaLoader(lua_State* L);
 
@@ -190,15 +130,14 @@ namespace saturn
 
 		void callSetup();
 	public:
-		
-		
+
 		explicit LuaContext(bool openLibs = true);
 		explicit LuaContext(lua_State* L);
 
 		~LuaContext();
 
 		void pop(int n);
-		
+
 		void call(int numArgs = 0, int numReturns = LUA_MULTRET);
 
 		void registerFunc(const std::string& name, LuaCFunc func);
