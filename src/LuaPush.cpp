@@ -7,6 +7,7 @@ using namespace saturn;
 constexpr int FUNC_PTR = 1;
 constexpr int STATE_PTR = 2;
 
+/*
 LuaContext::LuaPush::LuaPush(LuaContext* parent) :
 	parent(parent)
 {
@@ -21,11 +22,6 @@ void LuaContext::LuaPush::boolean(bool b)
 void LuaContext::LuaPush::globalTable()
 {
 	lua_pushglobaltable(L);
-}
-
-void LuaContext::LuaPush::integer(LuaInt n)
-{
-	lua_pushinteger(L, n);
 }
 
 void LuaContext::LuaPush::pointer(void* p)
@@ -78,32 +74,10 @@ void LuaContext::LuaPush::copy(int from, int to)
 	lua_copy(L, from, to);
 }
 
-void LuaContext::LuaPush::luaFunc(LuaCFunc func, int upvalues)
-{
-	lua_pushcclosure(L, func, upvalues);
-}
 
 void LuaContext::LuaPush::table(int arrayHint, int dictHint)
 {
 	lua_createtable(L, arrayHint, dictHint);
-}
-
-void LuaContext::LuaPush::saturnFunc(SaturnFunc func)
-{
-	lua_pushlightuserdata(L, this);
-	lua_pushlightuserdata(L, func);
-
-	lua_pushcclosure(L, callOverride, 2);
-	//lua_pushcclosure(L, callOverride, 1);
-}
-
-int LuaContext::LuaPush::callOverride(lua_State* L)
-{
-	LuaContext* ctx = (LuaContext*)lua_touserdata(L, lua_upvalueindex(1));
-	//LuaContext ctx(L);
-	SaturnFunc func = (SaturnFunc)lua_touserdata(L, lua_upvalueindex(2));
-
-	return func(*ctx);
 }
 
 int LuaContext::LuaPush::indexOverride(lua_State* L)
@@ -113,3 +87,33 @@ int LuaContext::LuaPush::indexOverride(lua_State* L)
 	//causes undefined behavior
 	return 0;
 }
+*/
+
+void LuaContext::push_integer(LuaInt n)
+{
+	lua_pushinteger(L, n);
+}
+
+void LuaContext::push_luaFunc(LuaCFunc func, int upvalues)
+{
+	lua_pushcclosure(L, func, upvalues);
+}
+
+void LuaContext::push_saturnFunc(SaturnFunc func)
+{
+	lua_pushlightuserdata(L, this);
+	lua_pushlightuserdata(L, func);
+
+	lua_pushcclosure(L, callOverride, 2);
+	//lua_pushcclosure(L, callOverride, 1);
+}
+
+int LuaContext::callOverride(lua_State* L)
+{
+	LuaContext* ctx = (LuaContext*)lua_touserdata(L, lua_upvalueindex(1));
+	//LuaContext ctx(L);
+	SaturnFunc func = (SaturnFunc)lua_touserdata(L, lua_upvalueindex(2));
+
+	return func(*ctx);
+}
+

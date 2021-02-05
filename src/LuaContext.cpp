@@ -5,13 +5,7 @@
 using namespace saturn;
 
 LuaContext::LuaContext(lua_State* L):
-	L(L),
-	push(this),
-	to(L),
-	load(L),
-	get(L),
-	set(L),
-	stack(L)
+	L(L)
 {
 	
 }
@@ -21,7 +15,7 @@ LuaContext::LuaContext(bool openLibs) :
 {
 	if(openLibs)
 	{
-		load.stdLibs();
+		load_stdLibs();
 	}
 }
 
@@ -64,6 +58,6 @@ void LuaContext::registerFunc(const std::string& name, LuaCFunc func)
 
 void LuaContext::registerFunc(const std::string& name, SaturnFunc func)
 {
-	push.saturnFunc(func);
-	set.global(name);
+	push_saturnFunc(func);
+	set_global(name);
 }

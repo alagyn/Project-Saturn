@@ -3,6 +3,7 @@
 
 using namespace saturn;
 
+/*
 LuaContext::LuaTo::LuaTo(lua_State* L) :
 	L(L)
 {
@@ -12,26 +13,6 @@ LuaContext::LuaTo::LuaTo(lua_State* L) :
 bool LuaContext::LuaTo::boolean(int idx)
 {
 	return lua_toboolean(L, idx);
-}
-
-LuaInt LuaContext::LuaTo::integer(int idx, bool unsafe)
-{
-	if(unsafe)
-	{
-		return lua_tointeger(L, idx);
-	}
-
-	int valid;
-
-	LuaInt out = lua_tointegerx(L, idx, &valid);
-
-	if(valid)
-	{
-		return out;
-	}
-	
-	LuaType act = convertLuaType(lua_type(L, idx));
-	throw LuaInvalidType(LuaType::NUMBER, act);
 }
 
 LuaNum LuaContext::LuaTo::number(int idx, bool unsafe)
@@ -68,4 +49,26 @@ const char* LuaContext::LuaTo::string(int idx, size_t* lenOutput)
 LuaCFunc LuaContext::LuaTo::luaFunc(int idx)
 {
 	return lua_tocfunction(L, idx);
+}
+*/
+
+
+LuaInt LuaContext::to_integer(int idx, bool unsafe)
+{
+	if(unsafe)
+	{
+		return lua_tointeger(L, idx);
+	}
+
+	int valid;
+
+	LuaInt out = lua_tointegerx(L, idx, &valid);
+
+	if(valid)
+	{
+		return out;
+	}
+
+	LuaType act = convertLuaType(lua_type(L, idx));
+	throw LuaInvalidType(LuaType::NUMBER, act);
 }

@@ -3,6 +3,8 @@
 #include <string>
 #include "LuaType.hpp"
 
+#define NO_INNER
+
 //TOFIX Test constructor efficiency w/ and w/o inner classes
 //TOFIX Test SaturnFunc efficiency vs vanilla
 //TOFIX Test SaturnFunc storing pointers in table vs upvalues
@@ -27,38 +29,37 @@ namespace saturn
 	private:
 		lua_State* L;
 
-		class LuaPush
-		{
-		private:
-			LuaContext* parent;
-			lua_State* L;
-
-			static int callOverride(lua_State* L);
-			static int indexOverride(lua_State* L);
-		public:
-			LuaPush(LuaContext* parent);
-
-			void boolean(bool b);
-			void luaFunc(LuaCFunc func, int upvalues = 0);
-			void saturnFunc(SaturnFunc func);
-			void fString(const char* format, ...);
-			void cString(const char* s, int len = -1);
-			void globalTable();
-			void integer(LuaInt n);
+		
+		static int callOverride(lua_State* L);
+		
+	public:
+			/*
+			void push_boolean(bool b);
+			*/
+			void push_luaFunc(LuaCFunc func, int upvalues = 0);
+			void push_saturnFunc(SaturnFunc func);
+			/*
+			void push_fString(const char* format, ...);
+			void push_cString(const char* s, int len = -1);
+			void push_globalTable();
+			*/
+			void push_integer(LuaInt n);
 			//Internally lightuserdata
-			void pointer(void* p);
+			/*
+			void push_pointer(void* p);
 			
-			void nil();
-			void number(LuaNum n);
-			void string(const std::string& s);
+			void push_nil();
+			void push_number(LuaNum n);
+			void push_string(const std::string& s);
 			//TODO pushthread
 			//internally pushvalue
-			void copy(int idx);
-			void copy(int from, int to);
-			void table(int arrayHint = 0, int dictHint = 0);
+			void push_copy(int idx);
+			void push_copy(int from, int to);
+			void push_table(int arrayHint = 0, int dictHint = 0);
 			//TODO newuserdata
-		};
-
+			*/
+	
+			/*
 		class LuaTo
 		{
 		private:
@@ -69,7 +70,7 @@ namespace saturn
 
 			bool boolean(int idx);
 			LuaCFunc luaFunc(int idx);
-			LuaInt integer(int idx, bool unsafe = true);
+			
 			const char* string(int idx, size_t* lenOutput = nullptr);
 			LuaNum number(int idx, bool unsafe = true);
 			//internally touserdata
@@ -116,7 +117,6 @@ namespace saturn
 			LuaGet(lua_State* L);
 
 			//TODO LuaGet
-			LuaType global(const std::string& name);
 			LuaType index(int tableIdx, LuaInt idx);
 			LuaType key(int tableIdx, const std::string& key);
 			//Uses top of stack as key, works for any object as key?
@@ -140,7 +140,6 @@ namespace saturn
 		public:
 			LuaSet(lua_State* L);
 
-			void global(const std::string& name);
 			void key(int tableIdx, const std::string& key);
 			void key(int tableIdx);
 			void index(int tableIdx, LuaInt idx);
@@ -172,35 +171,27 @@ namespace saturn
 			void rotate(int idx, int n);
 			//TODO equal/ other comparisons?
 		};
+		*/
 
+		/*
 		class LuaLoader
 		{
-		private:
-			lua_State* L;
-
-			void callSetup();
-
+		
 		public:
 			LuaLoader(lua_State* L);
 
-			void stdLibs();
-			void file(const std::string& filename, bool setup = true);
 			void string(const std::string& s, bool setup = true);
 		};
-
+		*/
 		//TODO LuaMetatableUtils?
 		//TODO LuaArith?
 		//TODO LuaGarbage?
 		//TODO LuaThread?
+
+		void callSetup();
 	public:
-
-		LuaPush push;
-		LuaTo to;
-		LuaLoader load;
-		LuaGet get;
-		LuaSet set;
-		LuaStack stack;
-
+		
+		
 		explicit LuaContext(bool openLibs = true);
 		explicit LuaContext(lua_State* L);
 
@@ -214,5 +205,13 @@ namespace saturn
 		void registerFunc(const std::string& name, SaturnFunc func);
 
 		void close();
+
+		void set_global(const std::string& name);
+		LuaType get_global(const std::string& name);
+
+		LuaInt to_integer(int idx, bool unsafe = true);
+
+		void load_stdLibs();
+		void load_file(const std::string& filename, bool setup = true);
 	};
 }

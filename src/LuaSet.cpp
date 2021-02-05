@@ -2,15 +2,18 @@
 
 using namespace saturn;
 
+
+void LuaContext::set_global(const std::string& name)
+{
+	lua_setglobal(L, name.c_str());
+}
+
+
+/*
 LuaContext::LuaSet::LuaSet(lua_State* L) :
 	L(L)
 {
 
-}
-
-void LuaContext::LuaSet::global(const std::string& name)
-{
-	lua_setglobal(L, name.c_str());
 }
 
 //Stack: -1 = val
@@ -49,3 +52,4 @@ void LuaContext::LuaSet::rawIndex(int tableIdx, LuaInt idx)
 {
 	lua_rawseti(L, tableIdx, idx);
 }
+*/

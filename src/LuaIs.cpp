@@ -1,7 +1,7 @@
 #include "LuaContext.hpp"
 
 using namespace saturn;
-
+/*
 LuaContext::LuaIs::LuaIs(lua_State* L):
 	L(L)
 {
@@ -77,3 +77,4 @@ bool LuaContext::LuaIs::yieldable(int idx)
 {
 	return lua_isyieldable(L);
 }
+*/

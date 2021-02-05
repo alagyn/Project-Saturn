@@ -2,15 +2,16 @@
 
 using namespace saturn;
 
+LuaType LuaContext::get_global(const std::string& name)
+{
+	return convertLuaType(lua_getglobal(L, name.c_str()));
+}
+
+/*
 LuaContext::LuaGet::LuaGet(lua_State* L) :
 	L(L)
 {
 
-}
-
-LuaType LuaContext::LuaGet::global(const std::string& name)
-{
-	return convertLuaType(lua_getglobal(L, name.c_str()));
 }
 
 LuaType LuaContext::LuaGet::index(int tableIdx, LuaInt idx)
@@ -57,3 +58,4 @@ LuaType LuaContext::LuaGet::rawKey(int tableIdx)
 {
 	return convertLuaType(lua_rawget(L, tableIdx));
 }
+*/
