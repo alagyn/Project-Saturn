@@ -27,6 +27,11 @@ LuaContext::LuaContext(bool openLibs) :
 
 LuaContext::~LuaContext()
 {
+	//lua_close(L);
+}
+
+void LuaContext::close()
+{
 	lua_close(L);
 }
 

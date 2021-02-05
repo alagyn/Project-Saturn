@@ -90,43 +90,20 @@ void LuaContext::LuaPush::table(int arrayHint, int dictHint)
 
 void LuaContext::LuaPush::saturnFunc(SaturnFunc func)
 {
-	//TODO figure out how to do upvalues
-
-	//create psuedo-func table
-	lua_createtable(L, 2, 0);
-	//Save func pointer
+	lua_pushlightuserdata(L, this);
 	lua_pushlightuserdata(L, func);
-	lua_rawseti(L, -2, FUNC_PTR);
-	//Save state pointer
-	lua_pushlightuserdata(L, parent);
-	lua_rawseti(L, -2, STATE_PTR);
 
-	//create metatable
-	lua_createtable(L, 0, 0);
-	//override __call method
-	lua_pushstring(L, "__call");
-	lua_pushcfunction(L, callOverride);
-	lua_settable(L, -3);
-	//TOCHANGE hide metatable?
-
-	//Insert metatable in psuedo-func
-	lua_setmetatable(L, -2);
+	lua_pushcclosure(L, callOverride, 2);
+	//lua_pushcclosure(L, callOverride, 1);
 }
 
 int LuaContext::LuaPush::callOverride(lua_State* L)
 {
-	//Get state
-	lua_rawgeti(L, 1, STATE_PTR);
-	LuaContext* state = (LuaContext*)lua_touserdata(L, -1);
-	//get function
-	lua_rawgeti(L, 1, FUNC_PTR);
-	SaturnFunc func = (SaturnFunc)lua_touserdata(L, -1);
-	//Remove pointers from stack
-	lua_pop(L, 2);
-	//remove table, shifts user args to correct position
-	lua_remove(L, 1);
-	//Call function
-	return func(*state);
+	LuaContext* ctx = (LuaContext*)lua_touserdata(L, lua_upvalueindex(1));
+	//LuaContext ctx(L);
+	SaturnFunc func = (SaturnFunc)lua_touserdata(L, lua_upvalueindex(2));
+
+	return func(*ctx);
 }
 
 int LuaContext::LuaPush::indexOverride(lua_State* L)
