@@ -213,5 +213,7 @@ namespace saturn
 		void registerFunc(const std::string& name, LuaCFunc func);
 		void registerFunc(const std::string& name, SaturnFunc func);
 
+
+		void close();
 	};
 }

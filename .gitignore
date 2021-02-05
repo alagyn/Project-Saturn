@@ -4,8 +4,11 @@
 *.filters
 /Debug/
 /Release/
+/x64/
 /libs/
 /.vs/
 /test/
 /notes/
 main.cpp
+*.csv
+*.xlsx
