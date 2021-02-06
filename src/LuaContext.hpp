@@ -25,20 +25,23 @@ namespace saturn
 
 	public:
 
-		void push_boolean(bool b);
+		template<LuaType T> void push();
+		template<> void push<LuaType::NIL>();
+
+		template<class T> void push(T v);
+		template<> void push<bool>(bool b);
+		template<> void push(LuaInt n);
+		template<> void push(LuaNum n);
+		template<> void push<void*>(void* p);
+
 		void push_luaFunc(LuaCFunc func, int upvalues = 0);
-		void push_saturnFunc(SaturnFunc func);
+		//void push_saturnFunc(SaturnFunc func);
+		/*
 
 		void push_fString(const char* format, ...);
 		void push_cString(const char* s, int len = -1);
 		void push_globalTable();
 
-		void push_integer(LuaInt n);
-		//Internally lightuserdata
-		void push_pointer(void* p);
-
-		void push_nil();
-		void push_number(LuaNum n);
 		void push_string(const std::string& s);
 		//TODO pushthread
 		//internally pushvalue
@@ -46,32 +49,37 @@ namespace saturn
 		void push_copy(int from, int to);
 		void push_table(int arrayHint = 0, int dictHint = 0);
 		//TODO newuserdata
+		*/
 
-		bool to_boolean(int idx);
+		template<class T> T to(int idx);
+		template<> LuaInt to(int idx);
+		template<> LuaNum to(int idx);
+		template<> bool to(int idx);
+		template<> void* to(int idx);
+		template<> const char* to(int idx);
+
 		LuaCFunc to_luaFunc(int idx);
 
-		const char* to_string(int idx, size_t* lenOutput = nullptr);
-		LuaNum to_number(int idx, bool unsafe = true);
-		//internally touserdata
-		void* to_pointer(int idx);
 		//TODO tothread
 
-		bool is_boolean(int idx);
-		bool is_cFunction(int idx);
-		bool is_function(int idx);
-		bool is_integer(int idx);
+		template<LuaType T> bool is(int idx);
+		template<> bool is<LuaType::BOOL>(int idx);
+		template<> bool is<LuaType::NIL>(int idx);
+		template<> bool is<LuaType::NUMBER>(int idx);
+		template<> bool is<LuaType::STRING>(int idx);;
+		template<> bool is<LuaType::TABLE>(int idx);
+		template<> bool is<LuaType::USERDATA>(int idx);
+		template<> bool is<LuaType::LIGHTUSERDATA>(int idx);
+		template<> bool is<LuaType::CFUNCTION>(int idx);
+		template<> bool is<LuaType::THREAD>(int idx);
+
 		//internally isLightUserData
 		bool is_pointer(int idx);
-		bool is_nil(int idx);
+
 		//internally isNone
 		bool is_invalid(int idx);
 		//internally isNoneOrNil
 		bool is_invalidOrNil(int idx);
-		bool is_number(int idx);
-		bool is_string(int idx);
-		bool is_table(int idx);
-		bool is_thread(int idx);
-		bool is_userdata(int idx);
 		bool is_yieldable(int idx);
 
 		//TODO equal?
@@ -129,8 +137,7 @@ namespace saturn
 		//TODO LuaThread?
 
 		void callSetup();
-	public:
-
+	
 		explicit LuaContext(bool openLibs = true);
 		explicit LuaContext(lua_State* L);
 
@@ -141,16 +148,15 @@ namespace saturn
 		void call(int numArgs = 0, int numReturns = LUA_MULTRET);
 
 		void registerFunc(const std::string& name, LuaCFunc func);
-		void registerFunc(const std::string& name, SaturnFunc func);
+		//void registerFunc(const std::string& name, SaturnFunc func);
 
 		void close();
 
 		void set_global(const std::string& name);
 		LuaType get_global(const std::string& name);
 
-		LuaInt to_integer(int idx, bool unsafe = true);
-
 		void load_stdLibs();
 		void load_file(const std::string& filename, bool setup = true);
 	};
+
 }

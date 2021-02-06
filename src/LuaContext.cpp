@@ -56,8 +56,10 @@ void LuaContext::registerFunc(const std::string& name, LuaCFunc func)
 	lua_register(L, name.c_str(), func);
 }
 
+/*
 void LuaContext::registerFunc(const std::string& name, SaturnFunc func)
 {
 	push_saturnFunc(func);
 	set_global(name);
 }
+*/

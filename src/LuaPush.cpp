@@ -7,75 +7,13 @@ using namespace saturn;
 constexpr int FUNC_PTR = 1;
 constexpr int STATE_PTR = 2;
 
-void LuaContext::push_boolean(bool b)
+int LuaContext::callOverride(lua_State* L)
 {
-	lua_pushboolean(L, b);
-}
+	LuaContext* ctx = (LuaContext*)lua_touserdata(L, lua_upvalueindex(FUNC_PTR));
+	//LuaContext ctx(L);
+	SaturnFunc func = (SaturnFunc)lua_touserdata(L, lua_upvalueindex(STATE_PTR));
 
-void LuaContext::push_globalTable()
-{
-	lua_pushglobaltable(L);
-}
-
-void LuaContext::push_pointer(void* p)
-{
-	lua_pushlightuserdata(L, p);
-}
-
-void LuaContext::push_nil()
-{
-	lua_pushnil(L);
-}
-
-void LuaContext::push_number(LuaNum n)
-{
-	lua_pushnumber(L, n);
-}
-
-void LuaContext::push_string(const std::string& s)
-{
-	lua_pushstring(L, s.c_str());
-}
-
-void LuaContext::push_fString(const char* format, ...)
-{
-	va_list args;
-	va_start(args, format);
-
-	lua_pushvfstring(L, format, args);
-}
-
-void LuaContext::push_cString(const char* s, int len)
-{
-	if(len < 0)
-	{
-		lua_pushstring(L, s);
-	}
-	else
-	{
-		lua_pushlstring(L, s, len);
-	}
-}
-
-void LuaContext::push_copy(int idx)
-{
-	lua_pushvalue(L, idx);
-}
-
-void LuaContext::push_copy(int from, int to)
-{
-	lua_copy(L, from, to);
-}
-
-
-void LuaContext::push_table(int arrayHint, int dictHint)
-{
-	lua_createtable(L, arrayHint, dictHint);
-}
-
-void LuaContext::push_integer(LuaInt n)
-{
-	lua_pushinteger(L, n);
+	return func(*ctx);
 }
 
 void LuaContext::push_luaFunc(LuaCFunc func, int upvalues)
@@ -83,20 +21,34 @@ void LuaContext::push_luaFunc(LuaCFunc func, int upvalues)
 	lua_pushcclosure(L, func, upvalues);
 }
 
-void LuaContext::push_saturnFunc(SaturnFunc func)
+template<class T> void LuaContext::push(T val)
 {
-	lua_pushlightuserdata(L, this);
-	lua_pushlightuserdata(L, func);
-
-	lua_pushcclosure(L, callOverride, 2);
+	throw LuaException("Invalid Datatype");
 }
 
-int LuaContext::callOverride(lua_State* L)
+template<> void LuaContext::push<bool>(bool b)
 {
-	LuaContext* ctx = (LuaContext*)lua_touserdata(L, lua_upvalueindex(1));
-	//LuaContext ctx(L);
-	SaturnFunc func = (SaturnFunc)lua_touserdata(L, lua_upvalueindex(2));
+	lua_pushboolean(L, b);
+}
 
-	return func(*ctx);
+template<> void LuaContext::push<LuaType::NIL>()
+{
+	lua_pushnil(L);
+}
+
+template<> void LuaContext::push(LuaInt n)
+{
+	lua_pushinteger(L, n);
+}
+
+template<> void LuaContext::push(LuaNum n)
+{
+	lua_pushnumber(L, n);
+}
+
+template<> void LuaContext::push<void*>(void* p)
+{
+	lua_pushlightuserdata(L, p);
+
 }
 
