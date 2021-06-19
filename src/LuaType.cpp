@@ -16,7 +16,7 @@ const char* saturn::getTypeString(LuaType t)
 		return "Number";
 	case LuaType::STRING:
 		return "String";
-	case LuaType::FUNCTION:
+	case LuaType::CFUNCTION:
 		return "Function";
 	case LuaType::POINTER:
 		return "Pointer";
@@ -38,7 +38,7 @@ LuaType saturn::convertLuaType(int t)
 	case LUA_TBOOLEAN:
 		return LuaType::BOOL;
 	case LUA_TFUNCTION:
-		return LuaType::FUNCTION;
+		return LuaType::CFUNCTION;
 	case LUA_TLIGHTUSERDATA:
 		return LuaType::POINTER;
 	case LUA_TNIL:

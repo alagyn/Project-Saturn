@@ -2,78 +2,67 @@
 
 using namespace saturn;
 
-LuaContext::LuaIs::LuaIs(lua_State* L):
-	L(L)
-{
-
-}
-
-bool LuaContext::LuaIs::boolean(int idx)
-{
-	return lua_isboolean(L, idx);
-}
-
-bool LuaContext::LuaIs::cFunction(int idx)
-{
-	return lua_iscfunction(L, idx);
-}
-
-bool LuaContext::LuaIs::function(int idx)
-{
-	return lua_isfunction(L, idx);
-}
-
-bool LuaContext::LuaIs::integer(int idx)
-{
-	return lua_isinteger(L, idx);
-}
-
-bool LuaContext::LuaIs::pointer(int idx)
+bool LuaContext::is_pointer(int idx)
 {
 	return lua_islightuserdata(L, idx);
 }
 
-bool LuaContext::LuaIs::nil(int idx)
-{
-	return lua_isnil(L, idx);
-}
-
-bool LuaContext::LuaIs::invalid(int idx)
+bool LuaContext::is_invalid(int idx)
 {
 	return lua_isnone(L, idx);
 }
 
-bool LuaContext::LuaIs::invalidOrNil(int idx)
+bool LuaContext::is_invalidOrNil(int idx)
 {
 	return lua_isnoneornil(L, idx);
 }
 
-bool LuaContext::LuaIs::number(int idx)
+bool LuaContext::is_yieldable(int idx)
+{
+	return lua_isyieldable(L);
+}
+
+template<> bool LuaContext::is<LuaType::BOOL>(int idx)
+{
+	return lua_isboolean(L, idx);
+}
+
+template<> bool LuaContext::is<LuaType::NIL>(int idx)
+{
+	return lua_isnil(L, idx);
+}
+
+template<> bool LuaContext::is<LuaType::NUMBER>(int idx)
 {
 	return lua_isnumber(L, idx);
 }
 
-bool LuaContext::LuaIs::string(int idx)
+template<> bool LuaContext::is<LuaType::STRING>(int idx)
 {
 	return lua_isstring(L, idx);
 }
 
-bool LuaContext::LuaIs::table(int idx)
+template<> bool LuaContext::is<LuaType::TABLE>(int idx)
 {
 	return lua_istable(L, idx);
 }
 
-bool LuaContext::LuaIs::thread(int idx)
-{
-	return lua_isthread(L, idx);
-}
-
-bool LuaContext::LuaIs::userdata(int idx)
+template<> bool LuaContext::is<LuaType::USERDATA>(int idx)
 {
 	return lua_isuserdata(L, idx);
 }
 
-bool LuaContext::LuaIs::yieldable(int idx)
+template<> bool LuaContext::is<LuaType::LIGHTUSERDATA>(int idx)
 {
-	return lua_isyieldable(L);
+	return lua_islightuserdata(L, idx);
+}
+
+template<> bool LuaContext::is<LuaType::CFUNCTION>(int idx)
+{
+	return lua_islightuserdata(L, idx);
+}
+
+template<> bool LuaContext::is<LuaType::THREAD>(int idx)
+{
+	return lua_isthread(L, idx);
 }

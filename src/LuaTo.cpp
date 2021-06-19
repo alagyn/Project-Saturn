@@ -3,69 +3,34 @@
 
 using namespace saturn;
 
-LuaContext::LuaTo::LuaTo(lua_State* L) :
-	L(L)
+//Undefined for non vanilla C functions
+LuaCFunc LuaContext::to_luaFunc(int idx)
 {
-
+	return lua_tocfunction(L, idx);
 }
 
-bool LuaContext::LuaTo::boolean(int idx)
+template<> LuaInt LuaContext::to(int idx)
+{
+	return lua_tointeger(L, idx);
+}
+
+template<> LuaNum LuaContext::to(int idx)
+{
+	return lua_tonumber(L, idx);
+}
+
+template<> bool LuaContext::to(int idx)
 {
 	return lua_toboolean(L, idx);
 }
 
-LuaInt LuaContext::LuaTo::integer(int idx, bool unsafe)
-{
-	if(unsafe)
-	{
-		return lua_tointeger(L, idx);
-	}
-
-	int valid;
-
-	LuaInt out = lua_tointegerx(L, idx, &valid);
-
-	if(valid)
-	{
-		return out;
-	}
-	
-	LuaType act = convertLuaType(lua_type(L, idx));
-	throw LuaInvalidType(LuaType::NUMBER, act);
-}
-
-LuaNum LuaContext::LuaTo::number(int idx, bool unsafe)
-{
-	if(unsafe)
-	{
-		return lua_tonumber(L, idx);
-	}
-
-	int valid;
-
-	LuaNum out = lua_tonumberx(L, idx, &valid);
-
-	if(valid)
-	{
-		return out;
-	}
-
-	LuaType act = convertLuaType(lua_type(L, idx));
-	throw LuaInvalidType(LuaType::NUMBER, act);
-}
-
-void* LuaContext::LuaTo::pointer(int idx)
+template<> void* LuaContext::to(int idx)
 {
 	return lua_touserdata(L, idx);
 }
 
-const char* LuaContext::LuaTo::string(int idx, size_t* lenOutput)
+template<> const char* LuaContext::to(int idx)
 {
-	return lua_tolstring(L, idx, lenOutput);
+	return lua_tostring(L, idx);
 }
 
-//Undefined for non vanilla C functions
-LuaCFunc LuaContext::LuaTo::luaFunc(int idx)
-{
-	return lua_tocfunction(L, idx);
-}
