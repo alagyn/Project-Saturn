@@ -5,21 +5,22 @@ using namespace saturn;
 
 int nativeFunc(LuaState& L)
 {
-	LuaInt a = L.to.integer(1);
-	LuaInt b = L.to.integer(2);
+	LuaInt a = L.to<LuaInt>(1);
+	LuaInt b = L.to<LuaInt>(2);
 
-	L.push.integer(a + b);
-	return 1;
+	L.push<LuaInt>(a + b);
+	
+    return 1;
 }
 
 int main()
 {
 	LuaState L;
 
-	L.load.file("test.lua");
-	L.registerFunc("nativeFunc", nativeFunc);
+	L.load_file("test.lua");
+	L.register_func("nativeFunc", nativeFunc);
 
-	L.get.global("scriptFunc");
+	L.get_global("scriptFunc");
 	L.call();
 
 	return 0;

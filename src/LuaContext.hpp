@@ -147,8 +147,8 @@ namespace saturn
 
 		void call(int numArgs = 0, int numReturns = LUA_MULTRET);
 
-		void registerFunc(const std::string& name, LuaCFunc func);
-		void registerFunc(const std::string& name, SaturnFunc func);
+		void register_func(const std::string& name, LuaCFunc func);
+		void register_func(const std::string& name, SaturnFunc func);
 
 		void close();
 
