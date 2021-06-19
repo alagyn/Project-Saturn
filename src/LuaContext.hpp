@@ -35,7 +35,7 @@ namespace saturn
 		template<> void push<void*>(void* p);
 
 		void push_luaFunc(LuaCFunc func, int upvalues = 0);
-		//void push_saturnFunc(SaturnFunc func);
+		void push_saturnFunc(SaturnFunc func);
 		/*
 
 		void push_fString(const char* format, ...);
@@ -148,7 +148,7 @@ namespace saturn
 		void call(int numArgs = 0, int numReturns = LUA_MULTRET);
 
 		void registerFunc(const std::string& name, LuaCFunc func);
-		//void registerFunc(const std::string& name, SaturnFunc func);
+		void registerFunc(const std::string& name, SaturnFunc func);
 
 		void close();
 

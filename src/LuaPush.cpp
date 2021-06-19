@@ -21,6 +21,14 @@ void LuaContext::push_luaFunc(LuaCFunc func, int upvalues)
 	lua_pushcclosure(L, func, upvalues);
 }
 
+void LuaContext::push_saturnFunc(SaturnFunc func)
+{
+	lua_pushlightuserdata(L, this);
+	lua_pushlightuserdata(L, func);
+
+	lua_pushcclosure(L, callOverride, 2);
+}
+
 template<class T> void LuaContext::push(T val)
 {
 	throw LuaException("Invalid Datatype");
