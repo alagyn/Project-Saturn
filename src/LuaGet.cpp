@@ -51,3 +51,8 @@ LuaType LuaContext::get_rawKey(int tableIdx)
 {
 	return convertLuaType(lua_rawget(L, tableIdx));
 }
+
+LuaType LuaContext::get_iUserVal(int udIdx, int n)
+{
+	return convertLuaType(lua_getiuservalue(L, udIdx, n));
+}

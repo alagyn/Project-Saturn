@@ -1,59 +1,46 @@
 #include "LuaType.hpp"
+#include <map>
+#include <stdexcept>
 
 using namespace saturn;
 
+const std::map<int, LuaType> convertMap = {
+	{LUA_TBOOLEAN, LuaType::BOOL},
+	{LUA_TFUNCTION, LuaType::CFUNCTION},
+	{LUA_TLIGHTUSERDATA, LuaType::POINTER},
+	{LUA_TNIL, LuaType::NIL},
+	{LUA_TNUMBER, LuaType::NUMBER},
+	{LUA_TSTRING, LuaType::STRING},
+	{LUA_TTABLE, LuaType::TABLE},
+	{LUA_TTHREAD, LuaType::THREAD},
+	{LUA_TUSERDATA, LuaType::USERDATA}
+};
+
+const std::map<LuaType, const char*> nameMap = {
+	{LuaType::NIL, "Nil"},
+	{LuaType::BOOL, "Bool"},
+	{LuaType::NUMBER, "Number"},
+	{LuaType::STRING, "String"},
+	{LuaType::CFUNCTION, "C Function"},
+	{LuaType::POINTER, "Pointer"},
+	{LuaType::USERDATA, "UserData"},
+	{LuaType::THREAD, "Thread"},
+	{LuaType::TABLE, "Table"}
+};
+
 const char* saturn::getTypeString(LuaType t)
 {
-	switch(t)
+	try
 	{
-	case LuaType::ERROR:
-		return "Invalid Index";
-	case LuaType::NIL:
-		return "Nil";
-	case LuaType::BOOL:
-		return "Bool";
-	case LuaType::NUMBER:
-		return "Number";
-	case LuaType::STRING:
-		return "String";
-	case LuaType::CFUNCTION:
-		return "Function";
-	case LuaType::POINTER:
-		return "Pointer";
-	case LuaType::USERDATA:
-		return "UserData";
-	case LuaType::THREAD:
-		return "Thread";
-	case LuaType::TABLE:
-		return "Table";
-	default:
+		return nameMap.at(t);
+	}
+	catch(const std::out_of_range& e)
+	{
 		return "Dev Error";
 	}
 }
 
 LuaType saturn::convertLuaType(int t)
 {
-	switch(t)
-	{
-	case LUA_TBOOLEAN:
-		return LuaType::BOOL;
-	case LUA_TFUNCTION:
-		return LuaType::CFUNCTION;
-	case LUA_TLIGHTUSERDATA:
-		return LuaType::POINTER;
-	case LUA_TNIL:
-		return LuaType::NIL;
-	case LUA_TNUMBER:
-		return LuaType::NUMBER;
-	case LUA_TSTRING:
-		return LuaType::STRING;
-	case LUA_TTABLE:
-		return LuaType::TABLE;
-	case LUA_TTHREAD:
-		return LuaType::THREAD;
-	case LUA_TUSERDATA:
-		return LuaType::USERDATA;
-	default:
-		return LuaType::ERROR;
-	}
+	return convertMap.at(t);
 }

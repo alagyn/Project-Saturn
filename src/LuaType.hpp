@@ -5,7 +5,7 @@ namespace saturn
 {
 	enum class LuaType
 	{
-		ERROR,
+		NONE,
 		NIL,
 		BOOL,
 		NUMBER,
@@ -13,7 +13,6 @@ namespace saturn
 		CFUNCTION,
 		SFUNCTION,
 		POINTER,
-		LIGHTUSERDATA,
 		USERDATA,
 		THREAD,
 		TABLE

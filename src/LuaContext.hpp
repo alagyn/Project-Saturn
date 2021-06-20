@@ -3,9 +3,6 @@
 #include <string>
 #include "LuaType.hpp"
 
-#define NO_INNER
-
-//TOFIX Test constructor efficiency w/ and w/o inner classes
 //TOFIX Figure out how to let users have upvalues for SaturnFuncs
 //TOFIX Figure out if LuaContext needs any state
 
@@ -16,6 +13,9 @@ namespace saturn
 	using SaturnFunc = int (*)(LuaContext&);
 	using LuaCFunc = int (*)(lua_State*);
 
+	using LuaThread = lua_State*;
+	using LuaString = const char*;
+
 	class LuaContext
 	{
 	private:
@@ -25,6 +25,8 @@ namespace saturn
 
 	public:
 
+		#pragma region PUSH
+
 		template<LuaType T> void push();
 		template<> void push<LuaType::NIL>();
 
@@ -32,63 +34,65 @@ namespace saturn
 		template<> void push<bool>(bool b);
 		template<> void push(LuaInt n);
 		template<> void push(LuaNum n);
+		template<> void push<const std::string&>(const std::string& s);
+		template<> void push<char*>(char* s);
+
+		//Define last to avoid other pointers matching?
 		template<> void push<void*>(void* p);
 
 		void push_luaFunc(LuaCFunc func, int upvalues = 0);
 		void push_saturnFunc(SaturnFunc func);
-		/*
 
-		void push_fString(const char* format, ...);
-		void push_cString(const char* s, int len = -1);
 		void push_globalTable();
+		void push_newTable(int arrayHint = 0, int dictHint = 0);
+		LuaThread push_newThread();
 
-		void push_string(const std::string& s);
-		//TODO pushthread
-		//internally pushvalue
-		void push_copy(int idx);
-		void push_copy(int from, int to);
-		void push_table(int arrayHint = 0, int dictHint = 0);
-		//TODO newuserdata
-		*/
+		void* push_newUserData(size_t size, int numUValues = 1);
+
+		#pragma endregion
+		
+		#pragma region TO
 
 		template<class T> T to(int idx);
-		template<> LuaInt to(int idx);
-		template<> LuaNum to(int idx);
+		template<class T> T to(int idx, int* ret = NULL);
+
+		template<> LuaInt to(int idx, int* ret);
+		template<> LuaNum to(int idx, int* ret);
 		template<> bool to(int idx);
 		template<> void* to(int idx);
-		template<> const char* to(int idx);
-
+		template<> LuaString to(int idx);
+		
 		LuaCFunc to_luaFunc(int idx);
 
-		//TODO tothread
+		#pragma endregion
+
+		#pragma region IS
 
 		template<LuaType T> bool is(int idx);
+		template<> bool is<LuaType::NONE>(int idx);
 		template<> bool is<LuaType::BOOL>(int idx);
 		template<> bool is<LuaType::NIL>(int idx);
 		template<> bool is<LuaType::NUMBER>(int idx);
 		template<> bool is<LuaType::STRING>(int idx);;
 		template<> bool is<LuaType::TABLE>(int idx);
 		template<> bool is<LuaType::USERDATA>(int idx);
-		template<> bool is<LuaType::LIGHTUSERDATA>(int idx);
+		template<> bool is<LuaType::POINTER>(int idx);
 		template<> bool is<LuaType::CFUNCTION>(int idx);
-		template<> bool is<LuaType::THREAD>(int idx);
+		template<> bool is<LuaType::SFUNCTION>(int idx);
 
-		//internally isLightUserData
-		bool is_pointer(int idx);
+		bool is_noneOrNil(int idx);
+		//TODO bool is_yieldable();
 
-		//internally isNone
-		bool is_invalid(int idx);
-		//internally isNoneOrNil
-		bool is_invalidOrNil(int idx);
-		bool is_yieldable(int idx);
+		#pragma endregion
 
-		//TODO equal?
-		//rawequal
+		#pragma region GET
 
-		//TODO LuaGet
+		//lua_geti
 		LuaType get_index(int tableIdx, LuaInt idx);
+		//lua_getfield
 		LuaType get_key(int tableIdx, const std::string& key);
 		//Uses top of stack as key, works for any object as key?
+		//lua_gettable
 		LuaType get_key(int tableIdx);
 		//Returns true if mt exists
 		bool get_metatable(int tableIdx);
@@ -99,13 +103,25 @@ namespace saturn
 		LuaType get_rawKey(int tableIdx);
 		LuaType get_rawIndex(int tableIdx, LuaInt idx);
 
+		LuaType get_iUserVal(int udIdx, int n = 0);
+		LuaType get_global(const std::string& name);
+
+		#pragma endregion
+
+		#pragma region SET
+
 		void set_key(int tableIdx, const std::string& key);
 		void set_key(int tableIdx);
 		void set_index(int tableIdx, LuaInt idx);
-		//TODO setiuservalue?
 		void set_metatable(int tableIdx);
-		void set_rawKey(int tableIdx);
-		void set_rawIndex(int tableIdx, LuaInt idx);
+		void set_raw(int tableIdx);
+		void set_raw(int tableIdx, LuaInt idx);
+		void set_raw(int tableIdx, const void* p);
+		
+		bool set_iUserVal(int udIdx, int n = 0);
+		void set_global(const std::string& name);
+
+		#pragma endregion
 
 		/*
 		int stack_absIndex(int idx);
@@ -122,27 +138,13 @@ namespace saturn
 		//TODO equal/ other comparisons?
 		*/
 
-		/*
-		class LuaLoader
-		{
-		public:
-			LuaLoader(lua_State* L);
-
-			void string(const std::string& s, bool setup = true);
-		};
-		*/
 		//TODO LuaMetatableUtils?
 		//TODO LuaArith?
 		//TODO LuaGarbage?
 		//TODO LuaThread?
 
-		void callSetup();
+		void initChunk();
 	
-		explicit LuaContext(bool openLibs = true);
-		explicit LuaContext(lua_State* L);
-
-		~LuaContext();
-
 		void pop(int n);
 
 		void call(int numArgs = 0, int numReturns = LUA_MULTRET);
@@ -150,13 +152,23 @@ namespace saturn
 		void register_func(const std::string& name, LuaCFunc func);
 		void register_func(const std::string& name, SaturnFunc func);
 
+		//internally pushvalue
+		void copy(int idx);
+		//internally pushcopy
+		void copy(int src, int dest);
+
+		bool rawEqual(int idx1, int idx2);
+
 		void close();
 
-		void set_global(const std::string& name);
-		LuaType get_global(const std::string& name);
-
 		void load_stdLibs();
-		void load_file(const std::string& filename, bool setup = true);
+		void load_file(const std::string& filename, bool init = true);
+		void load_string(const std::string& s, bool init = true);
+
+		explicit LuaContext(bool openLibs = true);
+		explicit LuaContext(lua_State* L);
+
+		~LuaContext();
 	};
 
 }

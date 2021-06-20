@@ -52,14 +52,28 @@ void LuaContext::call(int numArgs, int numReturns)
 	}
 }
 
-void LuaContext::registerFunc(const std::string& name, LuaCFunc func)
+void LuaContext::register_func(const std::string& name, LuaCFunc func)
 {
 	lua_register(L, name.c_str(), func);
 }
 
-void LuaContext::registerFunc(const std::string& name, SaturnFunc func)
+void LuaContext::register_func(const std::string& name, SaturnFunc func)
 {
 	push_saturnFunc(func);
 	set_global(name);
 }
 
+void LuaContext::copy(int idx)
+{
+	lua_pushvalue(L, idx);
+}
+
+void LuaContext::copy(int src, int dest)
+{
+	lua_copy(L, src, dest);
+}
+
+bool LuaContext::rawEqual(int idx1, int idx2)
+{
+	return (bool)lua_rawequal(L, idx1, idx2);
+}

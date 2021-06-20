@@ -35,13 +35,26 @@ void LuaContext::set_metatable(int tableIdx)
 }
 
 //Stack: -2 = key, -1 = val
-void LuaContext::set_rawKey(int tableIdx)
+void LuaContext::set_raw(int tableIdx)
 {
 	lua_rawset(L, tableIdx);
 }
 
 //Stack: -1 = val
-void LuaContext::set_rawIndex(int tableIdx, LuaInt idx)
+void LuaContext::set_raw(int tableIdx, LuaInt idx)
 {
 	lua_rawseti(L, tableIdx, idx);
+}
+
+//Stack: -1 = val
+void LuaContext::set_raw(int tableIdx, const void* p)
+{
+	lua_rawsetp(L, tableIdx, p);
+}
+
+//Stack: -1 = val
+//Returns false if UD does not have idx == n
+bool LuaContext::set_iUserVal(int udIdx, int n)
+{
+	return (bool)lua_setiuservalue(L, udIdx, n);
 }

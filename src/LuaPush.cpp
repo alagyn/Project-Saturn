@@ -60,3 +60,32 @@ template<> void LuaContext::push<void*>(void* p)
 
 }
 
+template<> void LuaContext::push<const std::string&>(const std::string& s)
+{
+	lua_pushstring(L, s.c_str());
+}
+
+template<> void LuaContext::push<char*>(char* s)
+{
+	lua_pushstring(L, s);
+}
+
+void LuaContext::push_globalTable()
+{
+	lua_pushglobaltable(L);
+}
+
+void LuaContext::push_newTable(int arrayHint, int dictHint)
+{
+	lua_createtable(L, arrayHint, dictHint);
+}
+
+LuaThread LuaContext::push_newThread()
+{
+	return lua_newthread(L);
+}
+
+void* LuaContext::push_newUserData(size_t size, int numUValues)
+{
+	return lua_newuserdatauv(L, size, numUValues);
+}
