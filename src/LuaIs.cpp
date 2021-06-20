@@ -8,12 +8,12 @@ bool LuaContext::is_noneOrNil(int idx)
 	return lua_type(L, idx) <= 0;
 }
 
-/*
-bool LuaContext::is_yieldable()
+
+bool LuaContext::is_yieldable(LuaThread t)
 {
-	return lua_isyieldable(L);
+	return lua_isyieldable(t);
 }
-*/
+
 
 template<> bool LuaContext::is<LuaType::NONE>(int idx)
 {
@@ -55,7 +55,7 @@ template<> bool LuaContext::is<LuaType::POINTER>(int idx)
 	return lua_type(L, idx) == LUA_TLIGHTUSERDATA;		
 }
 
-template<> bool LuaContext::is<LuaType::CFUNCTION>(int idx)
+template<> bool LuaContext::is<LuaType::FUNCTION>(int idx)
 {
 	return lua_iscfunction(L, idx);
 }
@@ -63,10 +63,4 @@ template<> bool LuaContext::is<LuaType::CFUNCTION>(int idx)
 template<> bool LuaContext::is<LuaType::THREAD>(int idx)
 {
 	return lua_type(L, idx) == LUA_TTHREAD;
-}
-
-template<> bool LuaContext::is<LuaType::SFUNCTION>(int idx)
-{
-	//TODO is SFUNC?
-	return false;
 }

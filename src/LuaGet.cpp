@@ -22,6 +22,7 @@ LuaType LuaContext::get_key(int tableIdx)
 	return convertLuaType(lua_gettable(L, tableIdx));
 }
 
+//Returns true if mt exists
 bool LuaContext::get_metatable(int tableIdx)
 {
 	return lua_getmetatable(L, tableIdx);

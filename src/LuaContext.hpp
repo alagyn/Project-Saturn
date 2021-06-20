@@ -2,6 +2,7 @@
 #include <lua.hpp>
 #include <string>
 #include "LuaType.hpp"
+#include <stdexcept>
 
 //TOFIX Figure out how to let users have upvalues for SaturnFuncs
 //TOFIX Figure out if LuaContext needs any state
@@ -27,22 +28,17 @@ namespace saturn
 
 		#pragma region PUSH
 
-		template<LuaType T> void push();
-		template<> void push<LuaType::NIL>();
+		void push(bool b);
+		void push(LuaInt n);
+		void push(LuaNum n);
+		void push(const std::string& s);
+		void push(char* s);
+		void push(LuaCFunc func, int upvalues = 0);
+		void push(SaturnFunc func);
+		
+		void push(void* p);
 
-		template<class T> void push(T v);
-		template<> void push<bool>(bool b);
-		template<> void push(LuaInt n);
-		template<> void push(LuaNum n);
-		template<> void push<const std::string&>(const std::string& s);
-		template<> void push<char*>(char* s);
-
-		//Define last to avoid other pointers matching?
-		template<> void push<void*>(void* p);
-
-		void push_luaFunc(LuaCFunc func, int upvalues = 0);
-		void push_saturnFunc(SaturnFunc func);
-
+		void push_nil();
 		void push_globalTable();
 		void push_newTable(int arrayHint = 0, int dictHint = 0);
 		LuaThread push_newThread();
@@ -53,17 +49,17 @@ namespace saturn
 		
 		#pragma region TO
 
-		template<class T> T to(int idx);
-		template<class T> T to(int idx, int* ret = NULL);
+		template<class T> T to(int idx, int* ret = NULL)
+		{
+			throw std::logic_error("Template not defined");
+		}
 
 		template<> LuaInt to(int idx, int* ret);
 		template<> LuaNum to(int idx, int* ret);
-		template<> bool to(int idx);
-		template<> void* to(int idx);
-		template<> LuaString to(int idx);
-		
-		LuaCFunc to_luaFunc(int idx);
-
+		template<> bool to(int idx, int* ret);
+		template<> LuaString to(int idx, int* ret);
+		template<> LuaCFunc to(int idx, int* ret);
+		template<> void* to(int idx, int* ret);
 		#pragma endregion
 
 		#pragma region IS
@@ -77,24 +73,19 @@ namespace saturn
 		template<> bool is<LuaType::TABLE>(int idx);
 		template<> bool is<LuaType::USERDATA>(int idx);
 		template<> bool is<LuaType::POINTER>(int idx);
-		template<> bool is<LuaType::CFUNCTION>(int idx);
-		template<> bool is<LuaType::SFUNCTION>(int idx);
-
+		template<> bool is<LuaType::FUNCTION>(int idx);
+		
 		bool is_noneOrNil(int idx);
-		//TODO bool is_yieldable();
+		bool is_yieldable(LuaThread t);
 
 		#pragma endregion
 
 		#pragma region GET
 
-		//lua_geti
 		LuaType get_index(int tableIdx, LuaInt idx);
-		//lua_getfield
 		LuaType get_key(int tableIdx, const std::string& key);
-		//Uses top of stack as key, works for any object as key?
-		//lua_gettable
 		LuaType get_key(int tableIdx);
-		//Returns true if mt exists
+		
 		bool get_metatable(int tableIdx);
 		LuaType get_type(int idx);
 		void get_length(int idx);

@@ -16,12 +16,12 @@ int LuaContext::callOverride(lua_State* L)
 	return func(*ctx);
 }
 
-void LuaContext::push_luaFunc(LuaCFunc func, int upvalues)
+void LuaContext::push(LuaCFunc func, int upvalues)
 {
 	lua_pushcclosure(L, func, upvalues);
 }
 
-void LuaContext::push_saturnFunc(SaturnFunc func)
+void LuaContext::push(SaturnFunc func)
 {
 	lua_pushlightuserdata(L, this);
 	lua_pushlightuserdata(L, func);
@@ -29,43 +29,38 @@ void LuaContext::push_saturnFunc(SaturnFunc func)
 	lua_pushcclosure(L, callOverride, 2);
 }
 
-template<class T> void LuaContext::push(T val)
-{
-	throw LuaException("Invalid Datatype");
-}
-
-template<> void LuaContext::push<bool>(bool b)
-{
-	lua_pushboolean(L, b);
-}
-
-template<> void LuaContext::push<LuaType::NIL>()
+void LuaContext::push_nil()
 {
 	lua_pushnil(L);
 }
 
-template<> void LuaContext::push(LuaInt n)
+void LuaContext::push(bool b)
+{
+	lua_pushboolean(L, b);
+}
+
+void LuaContext::push(LuaInt n)
 {
 	lua_pushinteger(L, n);
 }
 
-template<> void LuaContext::push(LuaNum n)
+ void LuaContext::push(LuaNum n)
 {
 	lua_pushnumber(L, n);
 }
 
-template<> void LuaContext::push<void*>(void* p)
+ void LuaContext::push(void* p)
 {
 	lua_pushlightuserdata(L, p);
 
 }
 
-template<> void LuaContext::push<const std::string&>(const std::string& s)
+ void LuaContext::push(const std::string& s)
 {
 	lua_pushstring(L, s.c_str());
 }
 
-template<> void LuaContext::push<char*>(char* s)
+ void LuaContext::push(char* s)
 {
 	lua_pushstring(L, s);
 }
