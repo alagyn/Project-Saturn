@@ -8,6 +8,8 @@ more closely with modern C++. Saturn will also use strictly functions, no more m
 
 Saturn is currently being built onto Lua version 5.4
 
+## API: [See the Project Saturn Wiki](https://github.com/alagyn/Project-Saturn/wiki)
+
 ## Examples
 #### Standard Lua C/C++ API, while specifically avoiding any macros
 ```C++
@@ -77,10 +79,6 @@ int main()
 	return 0;
 }
 ```
-
-## API
-Coming soon!
-
 
 ## What the name means
 Saturn is an acronym for "Snakes Are The Underrated Reptile Narwhal"...
