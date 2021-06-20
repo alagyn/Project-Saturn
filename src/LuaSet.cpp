@@ -10,20 +10,20 @@ void LuaContext::set_global(const std::string& name)
 
 
 //Stack: -1 = val
-void LuaContext::set_key(int tableIdx, const std::string& key)
+void LuaContext::set(int tableIdx, const std::string& key)
 {
 	lua_setfield(L, tableIdx, key.c_str());
 }
 
 //Stack: -2 = key, -1 = val
 //Pops both
-void LuaContext::set_key(int tableIdx)
+void LuaContext::set(int tableIdx)
 {
 	lua_settable(L, tableIdx);
 }
 
 //Stack: -1 = val
-void LuaContext::set_index(int tableIdx, LuaInt idx)
+void LuaContext::set(int tableIdx, LuaInt idx)
 {
 	lua_seti(L, tableIdx, idx);
 }

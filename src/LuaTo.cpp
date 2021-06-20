@@ -4,39 +4,37 @@
 using namespace saturn;
 
 //Undefined for non vanilla C functions
-template<> LuaCFunc LuaContext::to(int idx, int* ret)
+LuaCFunc LuaContext::to_cFunc(int idx)
 {
 	return lua_tocfunction(L, idx);
 }
 
-template<> LuaInt LuaContext::to(int idx, int* ret)
+LuaInt LuaContext::to_int(int idx, int* ret)
 {
 	return lua_tointegerx(L, idx, ret);
 }
 
-template<> LuaNum LuaContext::to(int idx, int* ret)
+LuaNum LuaContext::to_num(int idx, int* ret)
 {
 	return lua_tonumberx(L, idx, ret);
 }
 
-template<> bool LuaContext::to(int idx, int* ret)
+bool LuaContext::to_bool(int idx)
 {
 	return lua_toboolean(L, idx);
 }
 
-template<> void* LuaContext::to(int idx, int* ret)
+void* LuaContext::to_pointer(int idx)
 {
 	return lua_touserdata(L, idx);
 }
 
-template<> const char* LuaContext::to(int idx, int* ret)
+LuaString LuaContext::to_string(int idx, size_t* len)
 {
-	//TOCHANGE lua_tolstring
-	//would require a new arg
-	return lua_tostring(L, idx);
+	return lua_tolstring(L, idx, len);
 }
 
-template<> LuaThread LuaContext::to(int idx, int* ret)
+LuaThread LuaContext::to_thread(int idx)
 {
 	return lua_tothread(L, idx);
 }

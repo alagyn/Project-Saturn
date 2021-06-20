@@ -17,7 +17,7 @@ namespace saturn
 		TABLE = LUA_TTABLE
 	};
 
-	LuaType convertLuaType(int t);
+	//LuaType convertLuaType(int t);
 	const char* getTypeString(LuaType t);
 
 	using LuaInt = lua_Integer;

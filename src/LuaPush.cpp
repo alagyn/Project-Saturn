@@ -44,7 +44,7 @@ void LuaContext::push(LuaInt n)
 	lua_pushinteger(L, n);
 }
 
- void LuaContext::push(LuaNum n)
+void LuaContext::push(LuaNum n)
 {
 	lua_pushnumber(L, n);
 }
@@ -70,17 +70,17 @@ void LuaContext::push_globalTable()
 	lua_pushglobaltable(L);
 }
 
-void LuaContext::push_newTable(int arrayHint, int dictHint)
+void LuaContext::new_table(int arrayHint, int dictHint)
 {
 	lua_createtable(L, arrayHint, dictHint);
 }
 
-LuaThread LuaContext::push_newThread()
+LuaThread LuaContext::new_thread()
 {
 	return lua_newthread(L);
 }
 
-void* LuaContext::push_newUserData(size_t size, int numUValues)
+void* LuaContext::new_userdata(size_t size, int numUValues)
 {
 	return lua_newuserdatauv(L, size, numUValues);
 }

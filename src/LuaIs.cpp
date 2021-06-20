@@ -14,53 +14,52 @@ bool LuaContext::is_yieldable(LuaThread t)
 	return lua_isyieldable(t);
 }
 
-
-template<> bool LuaContext::is<LuaType::NONE>(int idx)
+bool LuaContext::is_invalid(int idx)
 {
 	return lua_type(L, idx) == LUA_TNONE;
 }
 
-template<> bool LuaContext::is<LuaType::BOOL>(int idx)
+bool LuaContext::is_bool(int idx)
 {
 	return lua_type(L, idx) == LUA_TBOOLEAN;
 }
 
-template<> bool LuaContext::is<LuaType::NIL>(int idx)
+bool LuaContext::is_nil(int idx)
 {
 	return lua_type(L, idx) == LUA_TNIL;
 }
 
-template<> bool LuaContext::is<LuaType::NUMBER>(int idx)
+bool LuaContext::is_num(int idx)
 {
 	return lua_isnumber(L, idx);
 }
 
-template<> bool LuaContext::is<LuaType::STRING>(int idx)
+bool LuaContext::is_string(int idx)
 {
 	return lua_isstring(L, idx);
 }
 
-template<> bool LuaContext::is<LuaType::TABLE>(int idx)
+bool LuaContext::is_table(int idx)
 {
 	return lua_type(L, idx) == LUA_TTABLE;
 }
 
-template<> bool LuaContext::is<LuaType::USERDATA>(int idx)
+bool LuaContext::is_userdata(int idx)
 {
 	return lua_isuserdata(L, idx);
 }
 
-template<> bool LuaContext::is<LuaType::POINTER>(int idx)
+bool LuaContext::is_pointer(int idx)
 {
 	return lua_type(L, idx) == LUA_TLIGHTUSERDATA;		
 }
 
-template<> bool LuaContext::is<LuaType::FUNCTION>(int idx)
+bool LuaContext::is_function(int idx)
 {
 	return lua_iscfunction(L, idx);
 }
 
-template<> bool LuaContext::is<LuaType::THREAD>(int idx)
+bool LuaContext::is_thread(int idx)
 {
 	return lua_type(L, idx) == LUA_TTHREAD;
 }

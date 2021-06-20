@@ -28,7 +28,10 @@ const char* saturn::getTypeString(LuaType t)
 	}
 }
 
+//TODO remove
+/* 
 LuaType saturn::convertLuaType(int t)
 {
 	return static_cast<LuaType>(t);
 }
+*/

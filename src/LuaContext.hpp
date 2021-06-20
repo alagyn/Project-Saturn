@@ -26,8 +26,6 @@ namespace saturn
 
 	public:
 
-		#pragma region PUSH
-
 		void push(bool b);
 		void push(LuaInt n);
 		void push(LuaNum n);
@@ -40,51 +38,37 @@ namespace saturn
 
 		void push_nil();
 		void push_globalTable();
-		void push_newTable(int arrayHint = 0, int dictHint = 0);
-		LuaThread push_newThread();
-
-		void* push_newUserData(size_t size, int numUValues = 1);
-
-		#pragma endregion
 		
-		#pragma region TO
+		void new_table(int arrayHint = 0, int dictHint = 0);
+		LuaThread new_thread();
+		void* new_userdata(size_t size, int numUValues = 1);
 
-		template<class T> T to(int idx, int* ret = NULL)
-		{
-			throw std::logic_error("Template not defined");
-		}
-
-		template<> LuaInt to(int idx, int* ret);
-		template<> LuaNum to(int idx, int* ret);
-		template<> bool to(int idx, int* ret);
-		template<> LuaString to(int idx, int* ret);
-		template<> LuaCFunc to(int idx, int* ret);
-		template<> void* to(int idx, int* ret);
-		#pragma endregion
-
-		#pragma region IS
-
-		template<LuaType T> bool is(int idx);
-		template<> bool is<LuaType::NONE>(int idx);
-		template<> bool is<LuaType::BOOL>(int idx);
-		template<> bool is<LuaType::NIL>(int idx);
-		template<> bool is<LuaType::NUMBER>(int idx);
-		template<> bool is<LuaType::STRING>(int idx);;
-		template<> bool is<LuaType::TABLE>(int idx);
-		template<> bool is<LuaType::USERDATA>(int idx);
-		template<> bool is<LuaType::POINTER>(int idx);
-		template<> bool is<LuaType::FUNCTION>(int idx);
+		LuaInt to_int(int idx, int* ret = NULL);
+		LuaNum to_num(int idx, int* ret = NULL);
+		LuaString to_string(int idx, size_t* len = NULL);
 		
+		bool to_bool(int idx);
+		LuaCFunc to_cFunc(int idx);
+		void* to_pointer(int idx);
+		LuaThread to_thread(int idx);
+		
+		bool is_invalid(int idx);
+		bool is_bool(int idx);
+		bool is_nil(int idx);
 		bool is_noneOrNil(int idx);
+		bool is_num(int idx);
+		bool is_string(int idx);
+		bool is_table(int idx);
+		bool is_userdata(int idx);
+		bool is_pointer(int idx);
+		bool is_function(int idx);
+		bool is_thread(int idx);
+
 		bool is_yieldable(LuaThread t);
 
-		#pragma endregion
-
-		#pragma region GET
-
-		LuaType get_index(int tableIdx, LuaInt idx);
-		LuaType get_key(int tableIdx, const std::string& key);
-		LuaType get_key(int tableIdx);
+		LuaType get(int tableIdx);
+		LuaType get(int tableIdx, LuaInt idx);
+		LuaType get(int tableIdx, const std::string& key);
 		
 		bool get_metatable(int tableIdx);
 		LuaType get_type(int idx);
@@ -97,13 +81,10 @@ namespace saturn
 		LuaType get_iUserVal(int udIdx, int n = 0);
 		LuaType get_global(const std::string& name);
 
-		#pragma endregion
+		void set(int tableIdx);
+		void set(int tableIdx, const std::string& key);
+		void set(int tableIdx, LuaInt idx);
 
-		#pragma region SET
-
-		void set_key(int tableIdx, const std::string& key);
-		void set_key(int tableIdx);
-		void set_index(int tableIdx, LuaInt idx);
 		void set_metatable(int tableIdx);
 		void set_raw(int tableIdx);
 		void set_raw(int tableIdx, LuaInt idx);
@@ -111,8 +92,6 @@ namespace saturn
 		
 		bool set_iUserVal(int udIdx, int n = 0);
 		void set_global(const std::string& name);
-
-		#pragma endregion
 
 		/*
 		int stack_absIndex(int idx);
