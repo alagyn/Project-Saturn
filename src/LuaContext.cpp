@@ -20,6 +20,11 @@ LuaContext::LuaContext(bool openLibs) :
 	}
 }
 
+lua_State* LuaContext::getState()
+{
+	return L;
+}
+
 LuaContext::~LuaContext()
 {
 	//lua_close(L);
@@ -49,18 +54,27 @@ void LuaContext::call(int numArgs, int numReturns)
 	if(error)
 	{
 		throw LuaCallError(lua_tostring(L, -1));
+		//TOCHANGE should pop error off?
 	}
 }
 
-void LuaContext::register_func(const std::string& name, LuaCFunc func)
+//void LuaContext::call(const std::string& func, int numArgs = 0, int numReturns = LUA_MULTRET)
+//void call(const char* func, int numArgs = 0, int numReturns = LUA_MULTRET);
+
+void LuaContext::registerFunc(const std::string& name, LuaCFunc func)
 {
 	lua_register(L, name.c_str(), func);
 }
 
-void LuaContext::register_func(const std::string& name, SaturnFunc func)
+void LuaContext::registerFunc(const std::string& name, SaturnFunc func)
 {
 	push(func);
 	set_global(name);
+}
+
+int LuaContext::resetThread(LuaThread t)
+{
+	return lua_resetthread(t);
 }
 
 void LuaContext::copy(int idx)
@@ -76,4 +90,19 @@ void LuaContext::copy(int src, int dest)
 bool LuaContext::rawEqual(int idx1, int idx2)
 {
 	return (bool)lua_rawequal(L, idx1, idx2);
+}
+
+void LuaContext::len(int idx)
+{
+	lua_len(L, idx);
+}
+
+LuaUInt LuaContext::rawlen(int idx)
+{
+	return lua_rawlen(L, idx);
+}
+
+LuaNum LuaContext::version()
+{
+	return lua_version(L);
 }

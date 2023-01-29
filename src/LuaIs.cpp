@@ -3,30 +3,19 @@
 using namespace saturn;
 
 
-bool LuaContext::is_noneOrNil(int idx)
+LuaType LuaContext::type(int idx)
 {
-	return lua_type(L, idx) <= 0;
+	return static_cast<LuaType>(lua_type(L, idx));
 }
 
-
-bool LuaContext::is_yieldable(LuaThread t)
+bool LuaContext::is_cFunc(int idx)
 {
-	return lua_isyieldable(t);
+	return lua_iscfunction(L, idx);
 }
 
-bool LuaContext::is_invalid(int idx)
+bool LuaContext::is_int(int idx)
 {
-	return lua_type(L, idx) == LUA_TNONE;
-}
-
-bool LuaContext::is_bool(int idx)
-{
-	return lua_type(L, idx) == LUA_TBOOLEAN;
-}
-
-bool LuaContext::is_nil(int idx)
-{
-	return lua_type(L, idx) == LUA_TNIL;
+	return lua_isinteger(L, idx);
 }
 
 bool LuaContext::is_num(int idx)
@@ -34,14 +23,9 @@ bool LuaContext::is_num(int idx)
 	return lua_isnumber(L, idx);
 }
 
-bool LuaContext::is_string(int idx)
+bool LuaContext::is_str(int idx)
 {
 	return lua_isstring(L, idx);
-}
-
-bool LuaContext::is_table(int idx)
-{
-	return lua_type(L, idx) == LUA_TTABLE;
 }
 
 bool LuaContext::is_userdata(int idx)
@@ -49,17 +33,12 @@ bool LuaContext::is_userdata(int idx)
 	return lua_isuserdata(L, idx);
 }
 
-bool LuaContext::is_pointer(int idx)
+bool LuaContext::is_noneOrNil(int idx)
 {
-	return lua_type(L, idx) == LUA_TLIGHTUSERDATA;		
+	return lua_type(L, idx) <= 0;
 }
 
-bool LuaContext::is_function(int idx)
+bool LuaContext::is_yieldable(LuaThread t)
 {
-	return lua_iscfunction(L, idx);
-}
-
-bool LuaContext::is_thread(int idx)
-{
-	return lua_type(L, idx) == LUA_TTHREAD;
+	return lua_isyieldable(t);
 }

@@ -60,10 +60,15 @@ void LuaContext::push(LuaNum n)
 	lua_pushstring(L, s.c_str());
 }
 
- void LuaContext::push(char* s)
+ void LuaContext::push(const char* s)
 {
 	lua_pushstring(L, s);
 }
+
+ void LuaContext::push(const char* s, size_t len)
+ {
+	 lua_pushlstring(L, s, len);
+ }
 
 void LuaContext::push_globalTable()
 {

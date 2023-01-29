@@ -5,15 +5,15 @@
 using namespace saturn;
 
 const std::map<LuaType, const char*> nameMap = {
-	{LuaType::NIL, "Nil"},
-	{LuaType::BOOL, "Bool"},
-	{LuaType::NUMBER, "Number"},
-	{LuaType::STRING, "String"},
-	{LuaType::FUNCTION, "C Function"},
-	{LuaType::POINTER, "Pointer"},
-	{LuaType::USERDATA, "UserData"},
-	{LuaType::THREAD, "Thread"},
-	{LuaType::TABLE, "Table"}
+	{LuaType::Nil, "Nil"},
+	{LuaType::Bool, "Bool"},
+	{LuaType::Number, "Number"},
+	{LuaType::String, "String"},
+	{LuaType::Function, "C Function"},
+	{LuaType::Pointer, "Pointer"},
+	{LuaType::Userdata, "UserData"},
+	{LuaType::Thread, "Thread"},
+	{LuaType::Table, "Table"}
 };
 
 const char* saturn::getTypeString(LuaType t)

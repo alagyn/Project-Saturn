@@ -29,7 +29,7 @@ void* LuaContext::to_pointer(int idx)
 	return lua_touserdata(L, idx);
 }
 
-LuaString LuaContext::to_string(int idx, size_t* len)
+const char* LuaContext::to_str(int idx, size_t* len)
 {
 	return lua_tolstring(L, idx, len);
 }
